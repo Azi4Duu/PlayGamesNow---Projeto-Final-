@@ -178,6 +178,23 @@ class GameController extends Controller
 
         $request->validate($rules);
 
+        $hasSelectedPlatform = false;
+
+        foreach ($request->platforms as $platform) {
+            if (isset($platform['selected'])) {
+                $hasSelectedPlatform = true;
+                break;
+            }
+        }
+
+        if (!$hasSelectedPlatform) {
+            return back()
+                ->withErrors([
+                    'platforms' => 'Please select at least one platform.'
+                ])
+                ->withInput();
+        }
+
         foreach ($request->platforms as $platform) {
             if (isset($platform['selected']) && (!isset($platform['price']) || $platform['price'] === '')){
                 return back()->withErrors(['platforms' => 'Selected platforms must have a price.'])->withInput();
