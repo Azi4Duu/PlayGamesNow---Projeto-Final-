@@ -75,9 +75,9 @@ class UserController extends Controller
             'active' => $request->active
         ])){
             $user->assignRole($user->role);
-            return redirect()->route('admin.users.index');
+            return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
         }
-        return back()->withInput(['name', 'username', 'email']);
+        return back()->withInput(['name', 'username', 'email'])->with('error', 'Something went wrong while creating the user.');
     }
 
     /**
@@ -150,7 +150,7 @@ class UserController extends Controller
             }
             return redirect()->route('admin.users.index')->with('success', 'User updated successfully');
         }
-        return back()->withInput(['name', 'username', 'email']);
+        return back()->withInput(['name', 'username', 'email'])->with('error', 'Something went wrong while updating the user.');
     }
 
     /**

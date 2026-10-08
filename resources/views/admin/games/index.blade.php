@@ -11,6 +11,8 @@
         ]
     ])
 
+    @include('layout.parts.flash-messages')
+
     <section class="admin-section">
         <div class="container">
             <div class="admin-shell">
@@ -105,11 +107,29 @@
                                         <td>
                                             <div class="actions">
                                                 <a class="icon-action" href="{{route('admin.games.edit', $game)}}"><i class="fa fa-pen"></i></a>
-                                                <form action="{{route('admin.games.destroy', $game)}}" method="POST" style="display:inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="icon-action"><i class="fa fa-trash"></i></button>
-                                                </form>
+                                                <button type="submit" class="icon-action" data-bs-toggle="modal" data-bs-target="#deleteGameModal{{ $game->id }}"><i class="fa fa-trash"></i></button>
+                                            </div>
+                                            <div class="modal fade" id="deleteGameModal{{ $game->id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Delete game</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Are you sure you want to delete <strong>{{ $game->title }}</strong>?</p>
+                                                            <p class="text-muted mb-0">You can restore this game later.</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                            <form action="{{ route('admin.games.destroy', $game) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-danger">Delete game</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>

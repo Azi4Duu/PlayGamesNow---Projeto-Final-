@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\GameKeyController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
@@ -100,6 +101,8 @@ Route::middleware('auth')->group(function () {
                 Route::get('/games/trashed', [GameController::class, 'trashed'])->name('games.trashed');
                 Route::put('/games/{id}/trashed', [GameController::class, 'restore'])->name('games.restore');
                 Route::resource('games', GameController::class)->except('show');
+
+                Route::resource('keys', GameKeyController::class)->except('show');
             });
         });
     });

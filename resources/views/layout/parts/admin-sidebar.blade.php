@@ -7,6 +7,6 @@
     <a href="#">Publishers</a>
     <a href="#">Categories</a>
     <a href="#">Coupons</a>
-    <a href="#">Game Keys</a>
+    <a href="{{route('admin.keys.index')}}">Game Keys</a>
     <a href="#">Sales</a>
 </aside>

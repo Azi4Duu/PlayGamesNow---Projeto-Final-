@@ -11,6 +11,8 @@
         ]
     ])
 
+    @include('layout.parts.flash-messages')
+
     <section class="admin-section">
         <div class="container">
             <div class="admin-shell">
@@ -57,7 +59,7 @@
                                         <td>{{$userauth->name}}</td>
                                         <td>{{$userauth->email}}</td>
                                         <td>{{ucfirst($userauth->role)}}</td>
-                                        <td><span class="status {{ $userauth->active ? 'active' : 'inactive' }}">{{ $userauth->active ? 'Active' : 'Inactive' }}</span></td>
+                                        <td><span class="status {{ $userauth->active ? 'status-active' : 'status-inactive' }}">{{ $userauth->active ? 'Active' : 'Inactive' }}</span></td>
                                         <td>
                                             <div class="actions">
                                                 <a class="icon-action" href="{{route('admin.users.show', $userauth)}}"><i class="fa fa-eye"></i></a>
@@ -75,13 +77,30 @@
                                         <td class="actions">
                                             <a class="icon-action" href="{{route('admin.users.show', $user)}}"><i class="fa fa-eye"></i></a>
                                             <a class="icon-action" href="{{route('admin.users.edit', $user)}}"><i class="fa fa-pen"></i></a>
-                                            <form action="{{route('admin.users.destroy', $user)}}" method="POST" style="display: inline"
-                                                  onsubmit="return confirm('Are you sure you want to delete this user?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="icon-action" type="submit"><i class="fa fa-trash"></i></button>
-                                            </form>
+                                            <button class="icon-action" type="submit" data-bs-toggle="modal" data-bs-target="#deleteUserModal{{ $user->id }}"><i class="fa fa-trash"></i></button>
                                         </td>
+                                        <div class="modal fade" id="deleteUserModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Delete user</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Are you sure you want to delete <strong>{{ $user->name}}</strong>?</p>
+                                                        <p class="text-muted mb-0">You can restore this user later.</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger">Delete user</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </tr>
                                 @endforeach
                                 </tbody>

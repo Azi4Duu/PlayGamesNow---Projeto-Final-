@@ -11,6 +11,8 @@
         ]
     ])
 
+    @include('layout.parts.flash-messages')
+
     <section class="profile-section">
         <div class="container">
             @if($errors->any())

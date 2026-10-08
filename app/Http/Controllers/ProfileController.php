@@ -48,7 +48,7 @@ class ProfileController extends Controller
         {
             return redirect()->route('customer.profile.show')->with('success', 'Profile updated successfully');
         }
-        return back()->withInput();
+        return back()->withInput()->with('error', 'Something went wrong while updating your profile.');
     }
 
     public function changePassword(){

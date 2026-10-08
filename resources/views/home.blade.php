@@ -27,6 +27,8 @@
         </div>
     </div>
 
+    @include('layout.parts.flash-messages')
+
     <div class="features">
         <div class="container">
             <div class="row">

@@ -11,6 +11,8 @@
         ]
     ])
 
+    @include('layout.parts.flash-messages')
+
     <section class="auth-section">
         <div class="container">
 

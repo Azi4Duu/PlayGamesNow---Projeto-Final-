@@ -11,6 +11,8 @@
         ]
     ])
 
+    @include('layout.parts.flash-messages')
+
     <section class="admin-section">
         <div class="container">
             <div class="admin-shell">
