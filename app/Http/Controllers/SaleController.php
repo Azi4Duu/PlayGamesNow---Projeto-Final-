@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Sale;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,23 @@ class SaleController extends Controller
      */
     public function create()
     {
-        //
+        $cart = Cart::where('user_id', auth()->id())
+            ->where('status', 'active')
+            ->first();
+
+        if(!$cart || $cart->items->isEmpty()) {
+            return redirect()->route('customer.cart.index')
+                ->withErrors(['error' => 'Your cart is empty.']);
+        }
+
+        $total = 0;
+
+        foreach($cart->items as $item) {
+            $subtotal = $item->gamePlatform->price * $item->quantity;
+            $total += $subtotal;
+        }
+
+        return view('checkout.create', compact('cart', 'total'));
     }
 
     /**

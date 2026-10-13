@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameKeyController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -14,20 +16,13 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
-Route::get('/shop', function () {
-    return view('games.index');
-});
+Route::get('/shop', [GameController::class, 'shop'])->name('games.shop');
 
-Route::get('/shop/show', function () {
-    return view('games.show');
-});
+Route::get('/shop/{gamePlatform}', [GameController::class, 'show'])->name('games.show');
 
 Route::get('/contact', function () {
     return view('contact');
 });
-
-Route::get('/cart', function () {return view('cart.index');});
-
 
 Route::middleware('guest')->group(function () {
 
@@ -84,6 +79,13 @@ Route::middleware('auth')->group(function () {
 
                 Route::get('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password.show');
                 Route::put('/profile/change-password', [ProfileController::class, 'updatePassword'])->name('profile.change-password');
+
+                Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+                Route::post('/cart/{gamePlatform}', [CartController::class, 'store'])->name('cart.store');
+                Route::put('/cart/{cartItem}', [CartController::class, 'update'])->name('cart.update');
+                Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+                Route::get('/checkout', [SaleController::class, 'create'])->name('checkout.create');
             });
         });
     });

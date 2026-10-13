@@ -4,6 +4,7 @@
     <div class="main-banner">
         <div class="container">
             <div class="row">
+                @include('layout.parts.flash-messages')
                 <div class="col-lg-6 align-self-center">
                     <div class="caption header-text">
                         <h6>Welcome to Play Games Now</h6>
@@ -26,8 +27,6 @@
             </div>
         </div>
     </div>
-
-    @include('layout.parts.flash-messages')
 
     <div class="features">
         <div class="container">

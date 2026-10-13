@@ -22,10 +22,10 @@
                                 }
                             @endphp
                             <li><a href="{{route('home')}}" @if(Route::is('home')) class="active" @endif>Home</a></li>
-                            <li><a href="#">Our Shop</a></li>
+                            <li><a href="{{route('games.shop')}}">Our Shop</a></li>
                             <li><a href="#">Contact Us</a></li>
                             @role('customer')
-                                <li><a href="#">Cart</a></li>
+                                <li><a href="{{route('customer.cart.index')}}">Cart</a></li>
                                 <li>
                                     <a href="{{route('customer.profile.show')}}" @if(Route::is('customer.profile.*')) class="active" @endif>
                                         {{$initials}}
@@ -52,7 +52,7 @@
                         @endauth
                         @guest
                                 <li><a href="{{route('home')}}" @if(Route::is('home')) class="active" @endif>Home</a></li>
-                                <li><a href="#">Our Shop</a></li>
+                                <li><a href="{{route('games.shop')}}" @if(Route::is('games.*')) class="active" @endif >Our Shop</a></li>
                                 <li><a href="#">Contact Us</a></li>
                                 <li><a href="{{route('login')}}">Sign In</a></li>
                         @endguest

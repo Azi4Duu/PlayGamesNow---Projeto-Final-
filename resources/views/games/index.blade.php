@@ -13,177 +13,84 @@
 
     <div class="section trending">
         <div class="container">
-            <ul class="trending-filter">
-                <li>
-                    <a class="is_active" href="#!" data-filter="*">Show All</a>
-                </li>
-                <li>
-                    <a href="#!" data-filter=".adv">Adventure</a>
-                </li>
-                <li>
-                    <a href="#!" data-filter=".str">Strategy</a>
-                </li>
-                <li>
-                    <a href="#!" data-filter=".rac">Racing</a>
-                </li>
-            </ul>
+                <form action="{{ route('games.shop') }}" method="GET" class="shop-filters">
+                    <div class="shop-filter-row">
+                        <div class="form-group">
+                            <label>Search game</label>
+                            <input type="text" name="search" class="form-control-gk" placeholder="Search by game name...">
+                        </div>
+                        <div class="form-group">
+                            <label>Platform</label>
+                            <select name="platform" class="form-select-gk">
+                                <option value="">All platforms</option>
+                                @foreach($platforms as $platform)
+                                    <option value="{{ $platform->id }}">
+                                        {{ $platform->platform_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Order by price</label>
+                            <select name="order" class="form-select-gk">
+                                <option value="">Default</option>
+                                <option value="asc">Price: Low to High</option>
+                                <option value="desc">Price: High to Low</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn-gk light">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Categories</label>
+                        <div class="category-options">
+                            @foreach($categories as $category)
+                                <label>
+                                    <input type="checkbox" name="categories[]" value="{{ $category->id }}">
+                                    {{ $category->category_name }}
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                </form>
+
             <div class="row trending-box">
-                <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 adv">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-01.jpg" alt=""></a>
-                            <span class="price"><em>$36</em>$24</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 str">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-02.jpg" alt=""></a>
-                            <span class="price"><em>$32</em>$22</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 adv rac">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-03.jpg" alt=""></a>
-                            <span class="price"><em>$45</em>$30</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
+                @foreach($gamePlatforms as $gamePlatform)
+                    @php
+                        $game = $gamePlatform->game;
+                    @endphp
+                    <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6">
+                        <div class="item">
+                            <div class="thumb">
+                                <a href="{{route('games.show', $gamePlatform)}}"><img
+                                        src="{{ $game->image_url ? $game->image_url : asset('assets/images/default-game.png') }}"
+                                        alt="">
+                                </a>
+                                @if($gamePlatform->platform->icon_path)
+                                    <span class="platform-icon">
+                                        <img src="{{ asset($gamePlatform->platform->icon_path) }}" alt="{{ $gamePlatform->platform->platform_name }}">
+                                    </span>
+                                @endif
+                                <span class="price">
+                                    @if($gamePlatform->old_price)
+                                        <em>{{number_format($gamePlatform->old_price, 2)}}€</em>
+                                    @endif
+                                    {{number_format($gamePlatform->price, 2)}}€
+                                </span>
+                            </div>
+                            <div class="down-content">
+                                @foreach($game->categories as $category)
+                                    <span class="category">{{$category->category_name}}</span>
+                                @endforeach
+                                <h4>{{$game->title}}</h4>
+                                <a href="{{route('games.show', $game)}}"><i class="fa fa-shopping-bag"></i></a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 str">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-04.jpg" alt=""></a>
-                            <span class="price"><em>$32</em>$22</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 rac str">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-03.jpg" alt=""></a>
-                            <span class="price"><em>$38</em>$26</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 rac adv">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-01.jpg" alt=""></a>
-                            <span class="price"><em>$30</em>$20</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 rac str">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-04.jpg" alt=""></a>
-                            <span class="price"><em>$32</em>$22</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 rac adv">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-02.jpg" alt=""></a>
-                            <span class="price"><em>$32</em>$22</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 adv rac">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-03.jpg" alt=""></a>
-                            <span class="price"><em>$28</em>$20</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 str">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-04.jpg" alt=""></a>
-                            <span class="price"><em>$26</em>$18</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 adv">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-01.jpg" alt=""></a>
-                            <span class="price"><em>$32</em>$24</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 str">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-02.jpg" alt=""></a>
-                            <span class="price"><em>$45</em>$30</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
             <div class="row">
                 <div class="col-lg-12">

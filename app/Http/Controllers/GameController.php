@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Game;
 use App\Models\GamePlatform;
@@ -142,9 +144,41 @@ class GameController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Game $game)
+    public function show(GamePlatform $gamePlatform)
     {
-        //
+
+        $game = $gamePlatform->game;
+
+        $availableKeys = $gamePlatform->gameKeys()->where('status', 'available')->count();
+
+        $quantityInCart = 0;
+
+        if(auth()->check()){
+            $cart = Cart::where('user_id', auth()->id())->where('status', 'active')->first();
+
+            if($cart){
+                $cartItem = CartItem::where('cart_id', $cart->id)->where('game_platform_id', $gamePlatform->id)->first();
+                if($cartItem){
+                    $quantityInCart = $cartItem->quantity;
+                }
+            }
+        }
+
+        $remainingStock = $availableKeys - $quantityInCart;
+
+        $categoryIds = $game->categories()->pluck('id');
+
+        $relatedGames = GamePlatform::with([
+            'game',
+            'platform'
+        ])
+            ->where('active', true)
+            ->where('game_id', '!=', $game->id)
+            ->whereHas('game.categories', function ($q) use ($categoryIds) {
+                $q->whereIn('categories.id', $categoryIds);
+            })->take(5)->get();
+
+        return view('games.show', compact('gamePlatform', 'availableKeys', 'relatedGames', 'game', 'remainingStock'));
     }
 
     /**
@@ -307,5 +341,45 @@ class GameController extends Controller
         $game = Game::onlyTrashed()->findOrFail($id);
         $game->restore();
         return redirect()->route('admin.games.trashed')->with('success', 'Game restored successfully');
+    }
+
+    public function shop(Request $request){
+        $query = GamePlatform::with([
+            'game.categories',
+            'platform'
+        ])->where('active', true)->whereHas('game');
+
+        if($request->filled('categories')){
+            $selectedCategories = $request->categories;
+            $query->whereHas('game', function ($q) use ($selectedCategories) {
+                $q->whereHas('categories', function ($q) use ($selectedCategories) {
+                    $q->whereIn('categories.id', $selectedCategories);
+                });
+            });
+        }
+
+        if($request->filled('search')){
+            $query->whereHas('game', function ($q) use ($request) {
+               $q->where('title', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        if($request->filled('platform')){
+            $query->where('platform_id', $request->platform);
+        }
+
+        if($request->filled('order')){
+            $query->orderBy('price', $request->order);
+        }else{
+            $query->latest();
+        }
+
+        $categories = Category::orderBy('category_name')->get();
+
+        $gamePlatforms = $query->get();
+
+        $platforms = Platform::orderBy('platform_name')->get();
+
+        return view('games.index', compact('gamePlatforms', 'platforms', 'categories'));
     }
 }

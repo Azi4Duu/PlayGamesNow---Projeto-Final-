@@ -7,45 +7,63 @@
         'breadcrumbs' => [
             [
                 'label' => 'Shop',
-                'route' => route('games.index'),
+                'route' => route('games.shop'),
             ],
             [
-                'label' => 'Assasin Creed'
+                'label' => $gamePlatform->game->title
             ]
         ]
     ])
 
-    @include('layout.parts.page-heading', [
-        'title' => 'Our Shop',
-        'breadcrumb' => [
-            'label' => 'Shop',
-            'route' => '#'
-        ],
-        [
-            'label' => 'Assassin Creed'
-        ]
-    ])
+    @php
+        $game = $gamePlatform->game;
+    @endphp
 
     <div class="single-product section">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
                     <div class="left-image">
-                        <img src="{{asset('assets/images/single-game.jpg')}}" alt="">
+                        <img src="{{$game->image_url ? $game->image_url : asset('assets/images/default-game.png') }}" alt="">
                     </div>
                 </div>
                 <div class="col-lg-6 align-self-center">
-                    <h4>Call of Duty®: Modern Warfare® II</h4>
-                    <span class="price"><em>$28</em> $22</span>
-                    <p>LUGX Gaming Template is based on the latest Bootstrap 5 CSS framework. This template is provided by TemplateMo and it is suitable for your gaming shop ecommerce websites. Feel free to use this for any purpose. Thank you.</p>
-                    <form id="qty" action="#">
-                        <input type="qty" class="form-control" id="1" aria-describedby="quantity" placeholder="1">
-                        <button type="submit"><i class="fa fa-shopping-bag"></i> ADD TO CART</button>
-                    </form>
+                    <h4>{{$game->title}}</h4>
+                    <p>{{ $gamePlatform->platform->platform_name }}</p>
+                    <span class="price">
+                        @if($gamePlatform->old_price)
+                            <em>{{number_format($gamePlatform->old_price, 2)}}€</em>
+                        @endif
+                        {{ number_format($gamePlatform->price, 2) }}€
+                    </span>
+                    <p></p>
+                    @if($remainingStock > 0)
+                        @auth
+                            @role('customer')
+                                <form action="{{route('customer.cart.store', $gamePlatform)}}" method="POST">
+                                    @csrf
+                                    <input type="number" class="form-control" name="quantity" value="1" min="1" max="{{$remainingStock}}">
+                                    <button type="submit"><i class="fa fa-shopping-bag"></i> ADD TO CART</button>
+                                </form>
+                            @endrole
+                        @endauth
+                        @guest<a href="{{route('login.show')}}" class="btn-gk">Sign in to buy</a>@endguest
+                    @else
+                        <span class="status status-revoked">Out of stock</span>
+                    @endif
                     <ul>
-                        <li><span>Game ID:</span> COD MMII</li>
-                        <li><span>Genre:</span> <a href="#">Action</a>, <a href="#">Team</a>, <a href="#">Single</a></li>
-                        <li><span>Multi-tags:</span> <a href="#">War</a>, <a href="#">Battle</a>, <a href="#">Royal</a></li>
+                        <li><span>Publisher:</span>{{$game->publisher->publisher_name}}</li>
+                        <li><span>Platform:</span>{{$gamePlatform->platform->platform_name}}</li>
+                        <li><span>Release date:</span>{{$game->release_date}}</li>
+                        <li>
+                            <span>Categories:</span>
+                            @foreach($game->categories as $category)
+                                {{ $category->category_name }}
+                                @if(!$loop->last)
+                                    ,
+                                @endif
+                            @endforeach
+                        </li>
                     </ul>
                 </div>
                 <div class="col-lg-12">
@@ -66,19 +84,14 @@
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <!--<li class="nav-item" role="presentation">
                                         <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews (3)</button>
-                                    </li>
+                                    </li>-->
                                 </ul>
                             </div>
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-                                    <p>You can search for more templates on Google Search using keywords such as "templatemo digital marketing", "templatemo one-page", "templatemo gallery", etc. Please tell your friends about our website. If you need a variety of HTML templates, you may visit Tooplate and Too CSS websites.</p>
-                                    <br>
-                                    <p>Coloring book air plant shabby chic, crucifix normcore raclette cred swag artisan activated charcoal. PBR&B fanny pack pok pok gentrify truffaut kitsch helvetica jean shorts edison bulb poutine next level humblebrag la croix adaptogen. Hashtag poke literally locavore, beard marfa kogi bruh artisan succulents seitan tonx waistcoat chambray taxidermy. Same cred meggings 3 wolf moon lomo irony cray hell of bitters asymmetrical gluten-free art party raw denim chillwave tousled try-hard succulents street art.</p>
-                                </div>
-                                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-                                    <p>Coloring book air plant shabby chic, crucifix normcore raclette cred swag artisan activated charcoal. PBR&B fanny pack pok pok gentrify truffaut kitsch helvetica jean shorts edison bulb poutine next level humblebrag la croix adaptogen. <br><br>Hashtag poke literally locavore, beard marfa kogi bruh artisan succulents seitan tonx waistcoat chambray taxidermy. Same cred meggings 3 wolf moon lomo irony cray hell of bitters asymmetrical gluten-free art party raw denim chillwave tousled try-hard succulents street art.</p>
+                                    <p>{{$game->description}}</p>
                                 </div>
                             </div>
                         </div>
@@ -88,61 +101,48 @@
         </div>
     </div>
 
-    <div class="section categories related-games">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="section-heading">
-                        <h6>Action</h6>
-                        <h2>Related Games</h2>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="main-button">
-                        <a href="shop.html">View All</a>
-                    </div>
-                </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="{{asset('assets/images/categories-01.jpg')}}" alt=""></a>
+    @if($relatedGames->count())
+        <div class="section categories related-games">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-heading">
+                            <h2>Related Games</h2>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="{{asset('assets/images/categories-05.jpg')}}" alt=""></a>
+                <div class="row">
+                    @foreach($relatedGames as $related)
+                        <div class="col-lg col-sm-6 col-xs-12">
+                            <div class="item">
+                                <div class="thumb">
+                                    <a href="{{route('games.show', $related)}}">
+                                        <img src="{{ $related->game->image_url ? $related->game->image_url : asset('assets/images/default-game.png') }}" alt="">
+                                    </a>
+                                    @if($related->platform->icon_path)
+                                        <span class="platform-icon">
+                                            <img src="{{ asset($related->platform->icon_path) }}" alt="{{ $related->platform->platform_name }}">
+                                        </span>
+                                    @endif
+                                    <span class="price">
+                                        @if($related->old_price)
+                                            <em>{{number_format($related->old_price, 2)}}€</em>
+                                        @endif
+                                        {{number_format($related->price, 2)}}€
+                                    </span>
+                                </div>
+                                <div class="down-content">
+                                    @foreach($related->game->categories as $category)
+                                        <span class="category">{{$category->category_name}}</span>
+                                    @endforeach
+                                    <h4>{{$related->game->title}}</h4>
+                                    <a href="{{route('games.show', $related)}}"><i class="fa fa-shopping-bag"></i></a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="{{asset('assets/images/categories-03.jpg')}}" alt=""></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="{{asset('assets/images/categories-04.jpg')}}" alt=""></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="{{asset('assets/images/categories-05.jpg')}}" alt=""></a>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
-    </div>
+    @endif
 @endsection

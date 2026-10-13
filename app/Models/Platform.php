@@ -13,6 +13,7 @@ class Platform extends Model
 
     protected $fillable = [
         'platform_name',
+        'icon_path',
     ];
 
     public function gamePlatforms():HasMany{
