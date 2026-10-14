@@ -59,7 +59,7 @@
                                         <td class="actions">
                                             <form action="{{route('admin.users.restore', $user->id)}}" method="POST" style="display: inline">
                                                 @csrf
-                                                @method('PUT')
+                                                @method('PATCH')
                                                 <button class="icon-action" type="submit"><i class="fa-solid fa-trash-arrow-up"></i></button>
                                             </form>
                                         </td>

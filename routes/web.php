@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameKeyController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
@@ -102,16 +103,20 @@ Route::middleware('auth')->group(function () {
                 Route::get('/dashboard', [AdminController::class, 'showDashboard'])->name('dashboard.show');
 
                 Route::get('/users/trashed', [UserController::class, 'trashed'])->name('users.trashed');
-                Route::put('/users/{id}/trashed', [UserController::class, 'restore'])->name('users.restore');
+                Route::patch('/users/trashed/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
                 Route::resource('users', UserController::class);
 
                 Route::get('/games/trashed', [GameController::class, 'trashed'])->name('games.trashed');
-                Route::put('/games/{id}/trashed', [GameController::class, 'restore'])->name('games.restore');
+                Route::patch('/games/trashed/{id}/restore', [GameController::class, 'restore'])->name('games.restore');
                 Route::resource('games', GameController::class)->except('show');
 
-                Route::resource('categories', CategoryController::class)->except('show');
                 Route::get('/categories/trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
                 Route::patch('/categories/trashed/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+                Route::resource('categories', CategoryController::class)->except('show');
+
+                Route::get('/publishers/trashed', [PublisherController::class, 'trashed'])->name('publishers.trashed');
+                Route::patch('/publishers/trashed/{id}/restore', [PublisherController::class, 'restore'])->name('publishers.restore');
+                Route::resource('publishers', PublisherController::class)->except('show');
 
                 Route::resource('keys', GameKeyController::class)->except('show');
             });

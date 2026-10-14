@@ -23,7 +23,7 @@ class Game extends Model
     ];
 
     public function publisher():BelongsTo{
-        return $this->belongsTo(Publisher::class);
+        return $this->belongsTo(Publisher::class)->withTrashed();
     }
 
     public function categories():BelongsToMany{

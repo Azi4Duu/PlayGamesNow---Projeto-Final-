@@ -100,7 +100,7 @@
                                             <div class="actions">
                                                 <form action="{{route('admin.games.restore', $game->id)}}" method="POST" style="display:inline">
                                                     @csrf
-                                                    @method('PUT')
+                                                    @method('PATCH')
                                                     <button type="submit" class="icon-action"><i class="fa-solid fa-trash-arrow-up"></i></button>
                                                 </form>
                                             </div>

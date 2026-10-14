@@ -12,7 +12,8 @@ class PublisherController extends Controller
      */
     public function index()
     {
-        //
+        $publishers = Publisher::all();
+        return view('admin.publishers.index', compact('publishers'));
     }
 
     /**
@@ -20,7 +21,7 @@ class PublisherController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.publishers.create');
     }
 
     /**
@@ -28,7 +29,20 @@ class PublisherController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'publisher_name' => 'required|string|max:255|unique:publishers,publisher_name',
+            'website' => 'nullable|url|max:255',
+            'country' => 'nullable|string|max:255',
+        ]);
+
+        Publisher::create([
+            'publisher_name' => $request->publisher_name,
+            'website' => $request->website,
+            'country' => $request->country,
+        ]);
+
+        return redirect()->route('admin.publishers.index')
+            ->with('success', 'Publisher created successfully.');
     }
 
     /**
@@ -44,7 +58,7 @@ class PublisherController extends Controller
      */
     public function edit(Publisher $publisher)
     {
-        //
+        return view('admin.publishers.edit', compact('publisher'));
     }
 
     /**
@@ -52,7 +66,20 @@ class PublisherController extends Controller
      */
     public function update(Request $request, Publisher $publisher)
     {
-        //
+        $request->validate([
+            'publisher_name' => 'required|string|max:255|unique:publishers,publisher_name,' . $publisher->id,
+            'website' => 'nullable|url|max:255',
+            'country' => 'nullable|string|max:255',
+        ]);
+
+        $publisher->publisher_name = $request->publisher_name;
+        $publisher->website = $request->website;
+        $publisher->country = $request->country;
+
+        $publisher->save();
+
+        return redirect()->route('admin.publishers.index')
+            ->with('success', 'Publisher updated successfully.');
     }
 
     /**
@@ -60,6 +87,25 @@ class PublisherController extends Controller
      */
     public function destroy(Publisher $publisher)
     {
-        //
+        $publisher->delete();
+
+        return redirect()->route('admin.publishers.index')
+            ->with('success', 'Publisher deleted successfully.');
+    }
+
+    public function trashed()
+    {
+        $publishers = Publisher::onlyTrashed()->latest()->get();
+
+        return view('admin.publishers.trashed', compact('publishers'));
+    }
+
+    public function restore($id)
+    {
+        $publisher = Publisher::onlyTrashed()->findOrFail($id);
+        $publisher->restore();
+
+        return redirect()->route('admin.publishers.trashed')
+            ->with('success', 'Publisher restored successfully.');
     }
 }
