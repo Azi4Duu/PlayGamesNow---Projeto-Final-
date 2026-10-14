@@ -24,7 +24,7 @@ class GamePlatform extends Model
     }
 
     public function platform():belongsTo{
-        return $this->belongsTo(Platform::class);
+        return $this->belongsTo(Platform::class)->withTrashed();
     }
 
     public function gameKeys():HasMany{

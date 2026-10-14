@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameKeyController;
+use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\SaleController;
@@ -117,6 +118,10 @@ Route::middleware('auth')->group(function () {
                 Route::get('/publishers/trashed', [PublisherController::class, 'trashed'])->name('publishers.trashed');
                 Route::patch('/publishers/trashed/{id}/restore', [PublisherController::class, 'restore'])->name('publishers.restore');
                 Route::resource('publishers', PublisherController::class)->except('show');
+
+                Route::get('/platforms/trashed', [PlatformController::class, 'trashed'])->name('platforms.trashed');
+                Route::patch('/platforms/trashed/{id}/restore', [PlatformController::class, 'restore'])->name('platforms.restore');
+                Route::resource('platforms', PlatformController::class)->except('show');
 
                 Route::resource('keys', GameKeyController::class)->except('show');
             });
