@@ -24,7 +24,7 @@
                             <p>Manage trashed Games.</p>
                         </div>
                         <div>
-                            <a class="btn-gk light" href="{{route('admin.games.index')}}">Cancel</a>
+                            <a class="btn-gk light" href="{{route('admin.games.index')}}">Back to games</a>
                         </div>
                     </div>
                     <div class="admin-card">

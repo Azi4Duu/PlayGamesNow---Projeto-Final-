@@ -29,7 +29,7 @@
                     <ul class="profile-menu">
                         <li><a class="active" href="{{route('customer.profile.show')}}">Overview</a></li>
                         <li><a href="{{route('customer.profile.edit.show')}}">Edit profile</a></li>
-                        <li><a href="#">My purchases</a></li>
+                        <li><a href="{{route('customer.purchases.index')}}">My purchases</a></li>
                         <li><a href="{{route('customer.profile.change-password.show')}}">Change password</a></li>
                         <li>
                             <form action="{{route('logout')}}" method="POST">

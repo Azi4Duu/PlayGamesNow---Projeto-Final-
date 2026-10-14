@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameKeyController;
 use App\Http\Controllers\ProfileController;
@@ -86,6 +87,10 @@ Route::middleware('auth')->group(function () {
                 Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
 
                 Route::get('/checkout', [SaleController::class, 'create'])->name('checkout.create');
+                Route::post('/checkout', [SaleController::class, 'store'])->name('checkout.store');
+
+                Route::get('/purchases', [SaleController::class, 'index'])->name('purchases.index');
+                Route::get('/purchases/{sale}', [SaleController::class, 'show'])->name('purchases.show');
             });
         });
     });
@@ -103,6 +108,10 @@ Route::middleware('auth')->group(function () {
                 Route::get('/games/trashed', [GameController::class, 'trashed'])->name('games.trashed');
                 Route::put('/games/{id}/trashed', [GameController::class, 'restore'])->name('games.restore');
                 Route::resource('games', GameController::class)->except('show');
+
+                Route::resource('categories', CategoryController::class)->except('show');
+                Route::get('/categories/trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
+                Route::patch('/categories/trashed/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
 
                 Route::resource('keys', GameKeyController::class)->except('show');
             });

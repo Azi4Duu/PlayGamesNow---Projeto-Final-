@@ -51,6 +51,10 @@ textarea.form-control-gk{height:130px;border-radius:18px;padding-top:14px;resize
 .checkout-product-info strong {font-size: 14px;}
 .checkout-product-info span {font-size: 13px;color: #777;}
 .checkout-product-price {font-weight: 600;white-space: nowrap;}
+.payment-method-row {display: flex;align-items: stretch;;gap: 12px;}
+.payment-method-row .form-select-gk {flex: 1; height: 50px; margin: 0;}
+.payment-method-row .btn-gk {height: 50px;margin: 0;display: flex;align-items: center;justify-content: center;padding-top: 0;padding-bottom: 0;}
+
 
 .empty-note{padding:28px;text-align:center;color:#888;background:#fafafa;border-radius:16px}
 footer{margin-top:0}
