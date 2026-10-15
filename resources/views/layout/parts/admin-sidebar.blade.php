@@ -6,7 +6,7 @@
     <a href="{{route('admin.platforms.index')}}">Platforms</a>
     <a href="{{route('admin.publishers.index')}}">Publishers</a>
     <a href="{{route('admin.categories.index')}}">Categories</a>
-    <a href="#">Coupons</a>
+    <a href="{{route('admin.coupons.index')}}">Coupons</a>
     <a href="{{route('admin.keys.index')}}">Game Keys</a>
     <a href="#">Sales</a>
 </aside>

@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameKeyController;
 use App\Http\Controllers\PlatformController;
@@ -122,6 +123,10 @@ Route::middleware('auth')->group(function () {
                 Route::get('/platforms/trashed', [PlatformController::class, 'trashed'])->name('platforms.trashed');
                 Route::patch('/platforms/trashed/{id}/restore', [PlatformController::class, 'restore'])->name('platforms.restore');
                 Route::resource('platforms', PlatformController::class)->except('show');
+
+                Route::get('/coupons/trashed', [CouponController::class, 'trashed'])->name('coupons.trashed');
+                Route::patch('/coupons/trashed/{id}/restore', [CouponController::class, 'restore'])->name('coupons.restore');
+                Route::resource('coupons', CouponController::class)->except('show');
 
                 Route::resource('keys', GameKeyController::class)->except('show');
             });

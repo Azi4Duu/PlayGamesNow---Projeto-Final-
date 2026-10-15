@@ -24,7 +24,7 @@
                             <p>Manage trashed users.</p>
                         </div>
                         <div>
-                            <a class="btn-gk light" href="{{route('admin.users.index')}}">Cancel</a>
+                            <a class="btn-gk light" href="{{route('admin.users.index')}}">Back to users</a>
                         </div>
                     </div>
                     <div class="admin-card">
