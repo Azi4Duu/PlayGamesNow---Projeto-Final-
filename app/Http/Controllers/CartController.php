@@ -109,6 +109,10 @@ class CartController extends Controller
      */
     public function update(Request $request, CartItem $cartItem)
     {
+        if($cartItem->cart->user_id != auth()->id()){
+            abort(403);
+        }
+
         $request->validate([
             'quantity' => 'required|integer|min:1',
         ]);
@@ -130,6 +134,10 @@ class CartController extends Controller
      */
     public function destroy(CartItem $cartItem)
     {
+        if($cartItem->cart->user_id != auth()->id()){
+            abort(403);
+        }
+
         $cartItem->delete();
 
         return redirect()->route('customer.cart.index')->with('success', 'Game removed from cart successfully.');
