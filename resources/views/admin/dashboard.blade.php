@@ -33,15 +33,24 @@
                         </div>
                         <div class="stat-card">
                             <span>Sales</span>
-                            <strong>316</strong>
+                            <strong>{{$sales}}</strong>
                         </div>
                         <div class="stat-card">
                             <span>Revenue</span>
-                            <strong>€8.4K</strong>
+                            <strong>
+                                @if($revenue >= 1000)
+                                    {{ number_format($revenue / 1000, 1, ',', '.') }}K€
+                                @else
+                                    {{ number_format($revenue, 2, ',', '.') }}€
+                                @endif
+                            </strong>
                         </div>
                     </div>
                     <div class="admin-card">
-                        <h3>Recent sales</h3>
+                        <div class="admin-card-header">
+                            <h3>Recent sales</h3>
+                            <a href="{{ route('admin.sales.index') }}" class="btn-gk">View all sales</a>
+                        </div>
                         <div class="table-wrap">
                             <table class="gk-table">
                                 <thead>
@@ -53,18 +62,16 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>#1042</td>
-                                    <td>Maria Silva</td>
-                                    <td>€39.99</td>
-                                    <td><span class="status paid">Paid</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#1041</td>
-                                    <td>João Costa</td>
-                                    <td>€24.99</td>
-                                    <td><span class="status pending">Pending</span></td>
-                                </tr>
+                                @foreach($recentSales as $sale)
+                                    <tr>
+                                        <td>
+                                            <a href="{{route('admin.sales.show', $sale)}}">#{{$sale->id}}</a>
+                                        </td>
+                                        <td>{{$sale->user->name}}</td>
+                                        <td>{{number_format($sale->total, 2)}}€</td>
+                                        <td><span class="status {{$sale->status}}">{{ucfirst($sale->status)}}</span></td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>

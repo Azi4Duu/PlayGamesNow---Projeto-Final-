@@ -46,16 +46,12 @@ textarea.form-control-gk{height:130px;border-radius:18px;padding-top:14px;resize
 .related-games .price {color: #fff;font-weight: 700;}
 .related-games .price em {margin-right: 6px;font-weight: 400;text-decoration: line-through;opacity: 0.7;}
 .related-games .thumb > a > img {width: 100%;height: 255px;object-fit: cover;display: block;}
-.checkout-product {display: flex;justify-content: space-between;gap: 20px;padding: 15px 0;border-bottom: 1px solid #eee;}
-.checkout-product-info {display: flex;flex-direction: column;gap: 4px;}
-.checkout-product-info strong {font-size: 14px;}
-.checkout-product-info span {font-size: 13px;color: #777;}
-.checkout-product-price {font-weight: 600;white-space: nowrap;}
-.payment-method-row {display: flex;align-items: stretch;;gap: 12px;}
-.payment-method-row .form-select-gk {flex: 1; height: 50px; margin: 0;}
+.checkout-product {display: flex;justify-content: space-between;gap: 20px;padding: 15px 0;border-bottom: 1px solid #eee;}  .checkout-product-info {display: flex;flex-direction: column;gap: 4px;}  .checkout-product-info strong {font-size: 14px;}  .checkout-product-info span {font-size: 13px;color: #777;}  .checkout-product-price {font-weight: 600;white-space: nowrap;}
+.payment-method-row {display: flex;align-items: stretch;;gap: 12px;}  .payment-method-row .form-select-gk {flex: 1; height: 50px; margin: 0;}
 .payment-method-row .btn-gk {height: 50px;margin: 0;display: flex;align-items: center;justify-content: center;padding-top: 0;padding-bottom: 0;}
 .admin-platform-icon {width: 36px;height: 36px;border-radius: 50%;background: #0071f8;display: flex;align-items: center;justify-content: center;}  .admin-platform-icon img {width: 20px;height: 20px;object-fit: contain;}  .admin-platform-icon i {color: #fff;}
-
+.sale-section {margin-bottom: 35px;}  .sale-section h4 {margin-bottom: 20px;}  .sale-info-grid {display: grid;grid-template-columns: repeat(2, 1fr);gap: 10px 40px;}  .sale-info-grid p {margin: 0;}  .sale-summary {border-top: 1px solid #eee;padding-top: 20px;margin-top: 10px;max-width: 350px;margin-left: auto;}  .sale-summary-row {display: flex;justify-content: space-between;margin-bottom: 8px;}  .sale-summary-row.total {font-size: 18px;margin-top: 10px;padding-top: 10px;border-top: 1px solid #ddd;}
+.admin-card-header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 20px;}  .admin-card-header h3 {margin: 0;}
 
 .empty-note{padding:28px;text-align:center;color:#888;background:#fafafa;border-radius:16px}
 footer{margin-top:0}

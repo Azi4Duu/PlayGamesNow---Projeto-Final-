@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminSaleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -127,6 +128,8 @@ Route::middleware('auth')->group(function () {
                 Route::get('/coupons/trashed', [CouponController::class, 'trashed'])->name('coupons.trashed');
                 Route::patch('/coupons/trashed/{id}/restore', [CouponController::class, 'restore'])->name('coupons.restore');
                 Route::resource('coupons', CouponController::class)->except('show');
+
+                Route::resource('sales', AdminSaleController::class)->only(['index', 'show']);
 
                 Route::resource('keys', GameKeyController::class)->except('show');
             });

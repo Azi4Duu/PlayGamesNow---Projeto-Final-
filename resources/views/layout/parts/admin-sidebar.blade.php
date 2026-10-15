@@ -8,5 +8,5 @@
     <a href="{{route('admin.categories.index')}}">Categories</a>
     <a href="{{route('admin.coupons.index')}}">Coupons</a>
     <a href="{{route('admin.keys.index')}}">Game Keys</a>
-    <a href="#">Sales</a>
+    <a href="{{route('admin.sales.index')}}">Sales</a>
 </aside>
