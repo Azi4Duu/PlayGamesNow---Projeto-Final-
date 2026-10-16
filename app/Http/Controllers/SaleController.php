@@ -168,6 +168,6 @@ class SaleController extends Controller
 
     public function success(Sale $sale)
     {
-
+        //
     }
 }
