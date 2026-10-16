@@ -12,9 +12,28 @@ class GamePlatformController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $gamePlatforms = GamePlatform::with('game', 'platform')->where('active', true)->get();
+        $query = GamePlatform::with('game', 'platform')->where('active', true);
+
+        if($request->filled('search')) {
+            $query->whereHas('game', function ($q) use ($request) {
+               $q->where('title', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        if($request->filled('platform')) {
+            $query->where('platform_id', $request->platform);
+        }
+
+        if($request->filled('category')) {
+            $query->whereHas('game.categories', function ($q) use ($request) {
+                $q->where('category_id', $request->category);
+            });
+        }
+
+        $gamePlatforms = $query->get();
+
         return GamePlatformResource::collection($gamePlatforms);
     }
 

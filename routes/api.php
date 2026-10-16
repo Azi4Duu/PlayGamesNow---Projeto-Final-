@@ -20,6 +20,8 @@ Route::name('api.')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('profile', [ProfileController::class, 'show']);
+        Route::patch('profile', [ProfileController::class, 'update']);
+        Route::patch('profile/password', [ProfileController::class, 'updatePassword']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::apiResource('cart-items', CartController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::apiResource('sales', SaleController::class)->only(['index', 'store', 'show']);
