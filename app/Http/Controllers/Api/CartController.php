@@ -111,16 +111,50 @@ class CartController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, CartItem $cartItem)
     {
-        //
+        if($cartItem->cart->user_id != $request->user()->id){
+            return response()->json([
+                'message' => 'You cannot edit this cart.',
+            ], 403);
+        }
+
+        $request->validate([
+           'quantity' => 'required|integer|min:1',
+        ]);
+
+        $availableKeys = $cartItem->gamePlatform->gameKeys()->where('status', 'available')->count();
+
+        if($request->quantity > $availableKeys){
+            return response()->json([
+                'message' => 'There is not enough stock available.'
+            ], 422);
+        }
+
+        $cartItem->quantity = $request->quantity;
+        $cartItem->save();
+
+        return response()->json([
+            'message' => 'Cart item updated successfully.',
+            'item' => new CartItemResource($cartItem),
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, CartItem $cartItem)
     {
-        //
+        if($cartItem->cart->user_id != $request->user()->id){
+            return response()->json([
+                'message' => 'You cannot edit this cart.',
+            ], 403);
+        }
+
+        $cartItem->delete();
+
+        return response()->json([
+            'message' => 'Cart item removed successfully.',
+        ]);
     }
 }
