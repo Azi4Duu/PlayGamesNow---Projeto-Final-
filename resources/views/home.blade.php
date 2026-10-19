@@ -10,18 +10,28 @@
                         <h6>Welcome to Play Games Now</h6>
                         <h2>BEST GAMING SITE EVER!</h2>
                         <div class="search-input">
-                            <form id="search" action="#">
-                                <input type="text" placeholder="Type Something" id='searchText' name="searchKeyword" onkeypress="handle" />
-                                <button role="button">Search Now</button>
+                            <form action="{{ route('games.shop') }}" method="GET">
+                                <input type="text" placeholder="Search for a game..." name="search" value="{{ request('search') }}" />
+                                <button type="submit">Search Now</button>
                             </form>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 offset-lg-2">
                     <div class="right-image">
-                        <img src="assets/images/banner-image.jpg" alt="">
-                        <span class="price">$22</span>
-                        <span class="offer">-40%</span>
+                        <a href="{{ route('games.show', $featuredGame) }}">
+                            @if($featuredGame)
+                                @if($featuredGame->game->image_url)
+                                    <img src="{{ $featuredGame->game->image_url }}" alt="{{ $featuredGame->game->title }}">
+                                @elseif($featuredGame->game->image_path)
+                                    <img src="{{ asset($featuredGame->game->image_path) }}" alt="{{ $featuredGame->game->title }}">
+                                @else
+                                    <img src="{{ asset('assets/images/default-game.png') }}" alt="Default game image">
+                                @endif
+                            @endif
+                            <span class="price">{{ number_format($featuredGame->price, 2, ',', '.') }}€</span>
+                            <span class="offer">-{{ $featuredGame->discount_percentage }}%</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -31,46 +41,22 @@
     <div class="features">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <a href="#">
-                        <div class="item">
-                            <div class="image">
-                                <img src="assets/images/featured-01.png" alt="" style="max-width: 44px;">
+                @foreach($topPlatforms as $platform)
+                    <div class="col-lg-3 col-md-6">
+                        <a href="{{ route('games.shop', ['platform' => $platform->id]) }}">
+                            <div class="item">
+                                <div class="home-platform-icon">
+                                    @if($platform->icon_path)
+                                        <img src="{{ asset($platform->icon_path) }}" alt="{{ $platform->platform_name }}">
+                                    @else
+                                        <i class="fa fa-gamepad"></i>
+                                    @endif
+                                </div>
+                                <h4>{{ $platform->platform_name }}</h4>
                             </div>
-                            <h4>Free Storage</h4>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <a href="#">
-                        <div class="item">
-                            <div class="image">
-                                <img src="assets/images/featured-02.png" alt="" style="max-width: 44px;">
-                            </div>
-                            <h4>User More</h4>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <a href="#">
-                        <div class="item">
-                            <div class="image">
-                                <img src="assets/images/featured-03.png" alt="" style="max-width: 44px;">
-                            </div>
-                            <h4>Reply Ready</h4>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <a href="#">
-                        <div class="item">
-                            <div class="image">
-                                <img src="assets/images/featured-04.png" alt="" style="max-width: 44px;">
-                            </div>
-                            <h4>Easy Layout</h4>
-                        </div>
-                    </a>
-                </div>
+                        </a>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -86,61 +72,39 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="main-button">
-                        <a href="shop.html">View All</a>
+                        <a href="{{route('games.shop')}}">View All</a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-01.jpg" alt=""></a>
-                            <span class="price"><em>$28</em>$20</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-02.jpg" alt=""></a>
-                            <span class="price">$44</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-03.jpg" alt=""></a>
-                            <span class="price"><em>$64</em>$44</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
+                @foreach($trendingGames as $gamePlatform)
+                    <div class="col-lg-3 col-md-6">
+                        <div class="item">
+                            <div class="thumb">
+                                <a href="{{route('games.show', $gamePlatform)}}">
+                                    @if($gamePlatform->game->image_url)
+                                        <img src="{{ $gamePlatform->game->image_url }}" alt="{{ $gamePlatform->game->title }}">
+                                    @elseif($gamePlatform->game->image_path)
+                                        <img src="{{ asset($gamePlatform->game->image_path) }}" alt="{{ $gamePlatform->game->title }}">
+                                    @else
+                                        <img src="{{ asset('assets/images/default-game.png') }}" alt="Default game image">
+                                    @endif
+                                </a>
+                                <span class="price">
+                                    @if($gamePlatform->old_price)
+                                        <em>
+                                            {{ number_format($gamePlatform->old_price, 2, ',', '.') }}€
+                                        </em>
+                                    @endif
+                                    {{ number_format($gamePlatform->price, 2, ',', '.') }}€
+                                </span>
+                            </div>
+                            <div class="down-content">
+                                <span class="category">{{ $gamePlatform->platform->platform_name }}</span>
+                                <h4>{{ $gamePlatform->game->title }}</h4>
+                                <a href="{{ route('games.show', $gamePlatform) }}"><i class="fa fa-shopping-bag"></i></a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-04.jpg" alt=""></a>
-                            <span class="price">$32</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -151,86 +115,36 @@
                 <div class="col-lg-6">
                     <div class="section-heading">
                         <h6>TOP GAMES</h6>
-                        <h2>Most Played</h2>
+                        <h2>Best Sellers</h2>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="main-button">
-                        <a href="shop.html">View All</a>
+                        <a href="{{route('games.shop')}}">View All</a>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/top-game-01.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Adventure</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html">Explore</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/top-game-02.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Adventure</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html">Explore</a>
+                @foreach($bestSellers as $gamePlatform)
+                    <div class="col-lg-2 col-md-6 col-sm-6">
+                        <div class="item">
+                            <div class="thumb">
+                                <a href="{{ route('games.show', $gamePlatform) }}">
+                                    @if($gamePlatform->game->image_url)
+                                        <img class="best-seller-image" src="{{ $gamePlatform->game->image_url }}" alt="{{ $gamePlatform->game->title }}">
+                                    @elseif($gamePlatform->game->image_path)
+                                        <img class="best-seller-image" src="{{ asset($gamePlatform->game->image_path) }}" alt="{{ $gamePlatform->game->title }}">
+                                    @else
+                                        <img class="best-seller-image" src="{{ asset('assets/images/default-game.png') }}" alt="Default game image">
+                                    @endif
+                                </a>
+                            </div>
+                            <div class="down-content">
+                                <span class="category">{{ $gamePlatform->platform->platform_name }}</span>
+                                <h4>{{ $gamePlatform->game->title }}</h4>
+                                <a href="{{ route('games.show', $gamePlatform) }}">Explore</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/top-game-03.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Adventure</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html">Explore</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/top-game-04.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Adventure</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html">Explore</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/top-game-05.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Adventure</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html">Explore</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/top-game-06.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Adventure</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html">Explore</a>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -244,87 +158,27 @@
                         <h2>Top Categories</h2>
                     </div>
                 </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/categories-01.jpg" alt=""></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/categories-05.jpg" alt=""></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/categories-03.jpg" alt=""></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/categories-04.jpg" alt=""></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/categories-05.jpg" alt=""></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="section cta">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-5">
-                    <div class="shop">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="section-heading">
-                                    <h6>Our Shop</h6>
-                                    <h2>Go Pre-Order Buy & Get Best <em>Prices</em> For You!</h2>
-                                </div>
-                                <p>Lorem ipsum dolor consectetur adipiscing, sed do eiusmod tempor incididunt.</p>
-                                <div class="main-button">
-                                    <a href="shop.html">Shop Now</a>
-                                </div>
+                @foreach($topCategories as $category)
+                    @php
+                        $categoryGame = $category->games->first();
+                    @endphp
+                    <div class="col-lg col-sm-6 col-xs-12">
+                        <div class="item">
+                            <h4>{{ $category->category_name }}</h4>
+                            <div class="thumb">
+                                <a href="{{ route('games.shop', ['categories' => $category->id]) }}">
+                                    @if($categoryGame && $categoryGame->image_url)
+                                        <img class="best-seller-image" src="{{ $categoryGame->image_url }}" alt="{{ $category->category_name }}">
+                                    @elseif($categoryGame && $categoryGame->image_path)
+                                        <img class="best-seller-image" src="{{ asset($categoryGame->image_path) }}" alt="{{ $category->category_name }}">
+                                    @else
+                                        <img class="best-seller-image" src="{{ asset('assets/images/default-game.png') }}" alt="{{ $category->category_name }}">
+                                    @endif
+                                </a>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-5 offset-lg-2 align-self-end">
-                    <div class="subscribe">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="section-heading">
-                                    <h6>NEWSLETTER</h6>
-                                    <h2>Get Up To $100 Off Just Buy <em>Subscribe</em> Newsletter!</h2>
-                                </div>
-                                <div class="search-input">
-                                    <form id="subscribe" action="#">
-                                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Your email...">
-                                        <button type="submit">Subscribe Now</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>

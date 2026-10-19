@@ -22,10 +22,10 @@
                                 }
                             @endphp
                             <li><a href="{{route('home')}}" @if(Route::is('home')) class="active" @endif>Home</a></li>
-                            <li><a href="{{route('games.shop')}}">Our Shop</a></li>
+                            <li><a href="{{route('games.shop')}}" @if(Route::is('games.*')) class="active" @endif>Our Shop</a></li>
                             <li><a href="#">Contact Us</a></li>
                             @role('customer')
-                                <li><a href="{{route('customer.cart.index')}}">Cart</a></li>
+                                <li><a href="{{route('customer.cart.index')}}" @if(Route::is('customer.cart.*')) class="active" @endif>Cart</a></li>
                                 <li>
                                     <a href="{{route('customer.profile.show')}}" @if(Route::is('customer.profile.*')) class="active" @endif>
                                         {{$initials}}
@@ -35,7 +35,7 @@
                             @endrole
                             @role('admin')
                             <li>
-                                <a href="{{route('admin.dashboard.show')}}" @if(Route::is('profile.*')) class="active" @endif>
+                                <a href="{{route('admin.dashboard.show')}}" @if(Route::is('admin.*')) class="active" @endif>
                                     {{$names[0]}}
                                     <i class="fa-solid fa-crown"></i>
                                 </a>

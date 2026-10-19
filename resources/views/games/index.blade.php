@@ -95,11 +95,21 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="pagination">
-                        <li><a href="#"> &lt; </a></li>
-                        <li><a href="#">1</a></li>
-                        <li><a class="is_active" href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#"> &gt; </a></li>
+                        @if($gamePlatforms->onFirstPage())
+                            <li><a class="disabled"> &lt; </a></li>
+                        @else
+                            <li><a href="{{ $gamePlatforms->previousPageUrl() }}"> &lt; </a></li>
+                        @endif
+
+                        @for($page = 1; $page <= $gamePlatforms->lastPage(); $page++)
+                            <li><a href="{{ $gamePlatforms->url($page) }}" class="{{ $gamePlatforms->currentPage() == $page ? 'is_active' : '' }}">{{ $page }}</a></li>
+                        @endfor
+
+                        @if($gamePlatforms->hasMorePages())
+                            <li><a href="{{ $gamePlatforms->nextPageUrl() }}"> &gt; </a></li>
+                        @else
+                            <li><a class="disabled"> &gt; </a></li>
+                        @endif
                     </ul>
                 </div>
             </div>

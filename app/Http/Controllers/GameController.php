@@ -350,7 +350,7 @@ class GameController extends Controller
         ])->where('active', true)->whereHas('game');
 
         if($request->filled('categories')){
-            $selectedCategories = $request->categories;
+            $selectedCategories = (array) $request->categories;
             $query->whereHas('game', function ($q) use ($selectedCategories) {
                 $q->whereHas('categories', function ($q) use ($selectedCategories) {
                     $q->whereIn('categories.id', $selectedCategories);
@@ -376,7 +376,7 @@ class GameController extends Controller
 
         $categories = Category::orderBy('category_name')->get();
 
-        $gamePlatforms = $query->get();
+        $gamePlatforms = $query->paginate(8)->withQueryString();
 
         $platforms = Platform::orderBy('platform_name')->get();
 
