@@ -55,6 +55,11 @@ textarea.form-control-gk{height:130px;border-radius:18px;padding-top:14px;resize
 .admin-sidebar a.active {background: rgba(255, 255, 255, 0.18);font-weight: 600;border-radius: 8px;}
 .best-seller-image {width: 100%;height: 230px;object-fit: cover;object-position: center;}
 .home-platform-icon {width: 82px;height: 82px;border-radius: 50%;background: #0071f8;display: flex;align-items: center;justify-content: center;margin: 0 auto;}  .home-platform-icon img {width: 52px;height: 52px;object-fit: contain;}
+ul.pagination {margin-top: 30px;text-align: center;width: 100%;display: inline-block;}
+ul.pagination li {display: inline-block;margin: 0 5px;}
+ul.pagination li a {display: inline-block;width: 40px;height: 40px;line-height: 40px;text-align: center;background-color: #eeeeee;color: #1e1e1e;border-radius: 50%;font-size: 15px;font-weight: 600;}
+ul.pagination li a:hover, ul.pagination li a.is_active {background-color: #0071f8;color: #ffffff;}
+ul.pagination li a.disabled {opacity: 0.4;pointer-events: none;}
 
 footer{margin-top:0}
 @media(max-width:991px){.profile-grid,.cart-grid,.admin-shell{grid-template-columns:1fr}.admin-sidebar{display:grid;grid-template-columns:repeat(2,1fr)}.stat-grid{grid-template-columns:repeat(2,1fr)}.form-row-gk,.data-list{grid-template-columns:1fr}}

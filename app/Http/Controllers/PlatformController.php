@@ -10,9 +10,15 @@ class PlatformController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $platforms = Platform::all();
+        $query = Platform::query();
+
+        if($request->filled('search')){
+            $query->where('platform_name', 'like', '%' . $request->search . '%');
+        }
+
+        $platforms = $query->latest()->paginate(6)->withQueryString();
 
         return view('admin.platforms.index', compact('platforms'));
     }
@@ -90,9 +96,15 @@ class PlatformController extends Controller
             ->with('success', 'Platform deleted successfully.');
     }
 
-    public function trashed()
+    public function trashed(Request $request)
     {
-        $platforms = Platform::onlyTrashed()->latest()->get();
+        $query = Platform::onlyTrashed();
+
+        if($request->filled('search')){
+            $query->where('platform_name', 'like', '%' . $request->search . '%');
+        }
+
+        $platforms = $query->latest()->paginate(6)->withQueryString();
 
         return view('admin.platforms.trashed', compact('platforms'));
     }

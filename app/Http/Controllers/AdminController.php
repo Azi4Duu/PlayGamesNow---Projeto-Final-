@@ -16,7 +16,7 @@ class AdminController extends Controller
 
         $revenue = Sale::where('status', 'paid')->sum('total');
 
-        $recentSales = Sale::with('user')->latest()->take(10)->get();
+        $recentSales = Sale::with('user')->latest()->take(6)->get();
 
         return view('admin.dashboard',compact('users' , 'games', 'sales', 'revenue', 'recentSales'));
     }

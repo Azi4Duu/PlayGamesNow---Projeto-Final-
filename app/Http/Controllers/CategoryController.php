@@ -10,9 +10,15 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::all();
+        $query = Category::query();
+
+        if($request->filled('search')){
+            $query->where('category_name', 'like', '%' . $request->search . '%');
+        }
+
+        $categories = $query->latest()->paginate(6)->withQueryString();
 
         return view('admin.categories.index', compact('categories'));
     }
@@ -86,16 +92,17 @@ class CategoryController extends Controller
             ->with('success', 'Category deleted successfully.');
     }
 
-    public function trashed()
+    public function trashed(Request $request)
     {
-        $categories = Category::onlyTrashed()
-            ->latest()
-            ->get();
+        $query = Category::onlyTrashed();
 
-        return view(
-            'admin.categories.trashed',
-            compact('categories')
-        );
+        if($request->filled('search')){
+            $query->where('category_name', 'like', '%' . $request->search . '%');
+        }
+
+        $categories = $query->latest('deleted_at')->paginate(6)->withQueryString();
+
+        return view('admin.categories.trashed', compact('categories'));
     }
 
     public function restore($id)

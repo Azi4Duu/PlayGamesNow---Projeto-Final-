@@ -115,6 +115,21 @@
                             </table>
                         </div>
                     </div>
+                    <ul class="pagination">
+                        @if($keys->onFirstPage())
+                            <li><a class="disabled">&lt;</a></li>
+                        @else
+                            <li><a href="{{ $keys->previousPageUrl() }}">&lt;</a></li>
+                        @endif
+                        @for($page = 1; $page <= $keys->lastPage(); $page++)
+                            <li><a href="{{ $keys->url($page) }}" class="{{ $keys->currentPage() == $page ? 'is_active' : '' }}">{{ $page }}</a></li>
+                        @endfor
+                        @if($keys->hasMorePages())
+                            <li><a href="{{ $keys->nextPageUrl() }}">&gt;</a></li>
+                        @else
+                            <li><a class="disabled">&gt;</a></li>
+                        @endif
+                    </ul>
                 </main>
             </div>
         </div>

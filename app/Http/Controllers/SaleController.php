@@ -14,9 +14,24 @@ class SaleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $sales = Sale::where('user_id', auth()->id())->latest()->get();
+        $query = Sale::where('user_id', auth()->id());
+
+        if($request->filled('sale_id')){
+            $query->where('id', $request->sale_id);
+        }
+
+        if($request->filled('status')){
+            $query->where('status', $request->status);
+        }
+
+        if($request->filled('payment_method')){
+            $query->where('payment_method', $request->payment_method);
+        }
+
+        $sales = $query->latest()->paginate(6)->withQueryString();
+
         return view('purchases.index', compact('sales'));
     }
 

@@ -14,8 +14,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $userauth=auth()->user();
-        $query = User::query()->where('id', '!=', $userauth->id);
+        $query = User::query();
 
         if($request->search){
             $query->where('name', 'like', '%'.$request->search.'%');
@@ -25,10 +24,14 @@ class UserController extends Controller
             $query->where('role', $request->role);
         }
 
-        $users = $query->get();
+        if($request->filled('active')){
+            $query->where('active', $request->active);
+        }
+
+        $users = $query->orderByRaw('id = ? DESC', [auth()->id()])->latest()->paginate(6)->withQueryString();
 
         $roles = Role::all();
-        return view('admin.users.index', compact('users', 'roles', 'userauth'));
+        return view('admin.users.index', compact('users', 'roles'));
     }
 
     /**
@@ -163,9 +166,25 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
 
-    public function trashed(){
-        $users = User::onlyTrashed()->get();
-        $roles = $users->pluck('role')->unique();
+    public function trashed(Request $request){
+        $query = User::onlyTrashed();
+
+        if($request->search){
+            $query->where('name', 'like', '%'.$request->search.'%');
+        }
+
+        if($request->role){
+            $query->where('role', $request->role);
+        }
+
+        if($request->filled('active')){
+            $query->where('active', $request->active);
+        }
+
+        $users = $query->latest('deleted_at')->paginate(6)->withQueryString();
+
+        $roles = Role::all();
+
         return view('admin.users.trashed', compact('users', 'roles'));
     }
 

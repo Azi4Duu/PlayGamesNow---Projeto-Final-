@@ -138,6 +138,21 @@
                             </table>
                         </div>
                     </div>
+                    <ul class="pagination">
+                        @if($games->onFirstPage())
+                            <li><a class="disabled">&lt;</a></li>
+                        @else
+                            <li><a href="{{ $games->previousPageUrl() }}">&lt;</a></li>
+                        @endif
+                        @for($page = 1; $page <= $games->lastPage(); $page++)
+                            <li><a href="{{ $games->url($page) }}" class="{{ $games->currentPage() == $page ? 'is_active' : '' }}">{{ $page }}</a></li>
+                        @endfor
+                        @if($games->hasMorePages())
+                            <li><a href="{{ $games->nextPageUrl() }}">&gt;</a></li>
+                        @else
+                            <li><a class="disabled">&gt;</a></li>
+                        @endif
+                    </ul>
                 </main>
             </div>
         </div>

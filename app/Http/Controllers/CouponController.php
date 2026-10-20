@@ -10,9 +10,23 @@ class CouponController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $coupons = Coupon::all();
+        $query = Coupon::query();
+
+        if($request->filled('search')){
+            $query->where('code', 'like', '%' . $request->search . '%');
+        }
+
+        if($request->filled('discount_type')){
+            $query->where('discount_type', $request->discount_type);
+        }
+
+        if($request->filled('active')){
+            $query->where('active', $request->active);
+        }
+
+        $coupons = $query->latest()->paginate(6)->withQueryString();
 
         return view('admin.coupons.index', compact('coupons'));
     }
@@ -118,9 +132,23 @@ class CouponController extends Controller
             ->with('success', 'Coupon deleted successfully.');
     }
 
-    public function trashed()
+    public function trashed(Request $request)
     {
-        $coupons = Coupon::onlyTrashed()->latest()->get();
+        $query = Coupon::onlyTrashed();
+
+        if($request->filled('search')){
+            $query->where('code', 'like', '%' . $request->search . '%');
+        }
+
+        if($request->filled('discount_type')){
+            $query->where('discount_type', $request->discount_type);
+        }
+
+        if($request->filled('active')){
+            $query->where('active', $request->active);
+        }
+
+        $coupons = $query->latest()->paginate(6)->withQueryString();
 
         return view('admin.coupons.trashed', compact('coupons'));
     }

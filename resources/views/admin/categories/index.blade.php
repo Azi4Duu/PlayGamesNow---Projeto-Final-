@@ -28,6 +28,12 @@
                         </div>
                     </div>
                     <div class="admin-card">
+                        <div class="admin-filter">
+                            <form method="GET" action="{{ route('admin.categories.index') }}">
+                                <input type="text" name="search" placeholder="Search categories..." class="form-control-gk">
+                                <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </form>
+                        </div>
                         <div class="table-wrap">
                             <table class="gk-table">
                                 <thead>
@@ -76,6 +82,21 @@
                             </table>
                         </div>
                     </div>
+                    <ul class="pagination">
+                        @if($categories->onFirstPage())
+                            <li><a class="disabled">&lt;</a></li>
+                        @else
+                            <li><a href="{{ $categories->previousPageUrl() }}">&lt;</a></li>
+                        @endif
+                        @for($page = 1; $page <= $categories->lastPage(); $page++)
+                            <li><a href="{{ $categories->url($page) }}" class="{{ $categories->currentPage() == $page ? 'is_active' : '' }}">{{ $page }}</a></li>
+                        @endfor
+                        @if($categories->hasMorePages())
+                            <li><a href="{{ $categories->nextPageUrl() }}">&gt;</a></li>
+                        @else
+                            <li><a class="disabled">&gt;</a></li>
+                        @endif
+                    </ul>
                 </main>
             </div>
         </div>

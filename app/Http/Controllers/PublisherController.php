@@ -10,9 +10,16 @@ class PublisherController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $publishers = Publisher::all();
+        $query = Publisher::query();
+
+        if($request->filled('search')){
+            $query->where('publisher_name', 'like', '%' . $request->search . '%');
+        }
+
+        $publishers = $query->latest()->paginate(6)->withQueryString();
+
         return view('admin.publishers.index', compact('publishers'));
     }
 
@@ -93,9 +100,15 @@ class PublisherController extends Controller
             ->with('success', 'Publisher deleted successfully.');
     }
 
-    public function trashed()
+    public function trashed(Request $request)
     {
-        $publishers = Publisher::onlyTrashed()->latest()->get();
+        $query = Publisher::onlyTrashed();
+
+        if($request->filled('search')){
+            $query->where('publisher_name', 'like', '%' . $request->search . '%');
+        }
+
+        $publishers = $query->latest('deleted_at')->paginate(6)->withQueryString();
 
         return view('admin.publishers.trashed', compact('publishers'));
     }

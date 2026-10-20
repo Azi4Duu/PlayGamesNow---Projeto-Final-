@@ -23,7 +23,7 @@
                             @endphp
                             <li><a href="{{route('home')}}" @if(Route::is('home')) class="active" @endif>Home</a></li>
                             <li><a href="{{route('games.shop')}}" @if(Route::is('games.*')) class="active" @endif>Our Shop</a></li>
-                            <li><a href="#">Contact Us</a></li>
+                            <!--<li><a href="#">Contact Us</a></li>-->
                             @role('customer')
                                 <li><a href="{{route('customer.cart.index')}}" @if(Route::is('customer.cart.*')) class="active" @endif>Cart</a></li>
                                 <li>
@@ -53,7 +53,7 @@
                         @guest
                                 <li><a href="{{route('home')}}" @if(Route::is('home')) class="active" @endif>Home</a></li>
                                 <li><a href="{{route('games.shop')}}" @if(Route::is('games.*')) class="active" @endif >Our Shop</a></li>
-                                <li><a href="#">Contact Us</a></li>
+                                <!--<li><a href="#">Contact Us</a></li>-->
                                 <li><a href="{{route('login')}}">Sign In</a></li>
                         @endguest
                     </ul>

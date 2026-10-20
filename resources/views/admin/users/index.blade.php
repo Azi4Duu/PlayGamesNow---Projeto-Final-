@@ -39,6 +39,11 @@
                                         <option>{{ucfirst($role->name)}}</option>
                                     @endforeach
                                 </select>
+                                <select class="form-select-gk" name="active">
+                                    <option value="">All Status</option>
+                                    <option value="1"{{ request('active') === '1' ? 'selected' : '' }}>Active</option>
+                                    <option value="0"{{ request('active') === '0' ? 'selected' : '' }}>Inactive</option>
+                                </select>
                                 <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
                             </div>
                         </form>
@@ -54,20 +59,6 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @if(!request('search') && !request('role'))
-                                    <tr>
-                                        <td>{{$userauth->name}}</td>
-                                        <td>{{$userauth->email}}</td>
-                                        <td>{{ucfirst($userauth->role)}}</td>
-                                        <td><span class="status {{ $userauth->active ? 'status-active' : 'status-inactive' }}">{{ $userauth->active ? 'Active' : 'Inactive' }}</span></td>
-                                        <td>
-                                            <div class="actions">
-                                                <a class="icon-action" href="{{route('admin.users.show', $userauth)}}"><i class="fa fa-eye"></i></a>
-                                                <a class="icon-action" href="{{route('admin.users.edit', $userauth)}}"><i class="fa fa-pen"></i></a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endif
                                 @foreach($users as $user)
                                     <tr>
                                         <td>{{$user->name}}</td>
@@ -77,7 +68,9 @@
                                         <td class="actions">
                                             <a class="icon-action" href="{{route('admin.users.show', $user)}}"><i class="fa fa-eye"></i></a>
                                             <a class="icon-action" href="{{route('admin.users.edit', $user)}}"><i class="fa fa-pen"></i></a>
-                                            <button class="icon-action" type="submit" data-bs-toggle="modal" data-bs-target="#deleteUserModal{{ $user->id }}"><i class="fa fa-trash"></i></button>
+                                            @if($user->id !== auth()->id())
+                                                <button class="icon-action" type="submit" data-bs-toggle="modal" data-bs-target="#deleteUserModal{{ $user->id }}"><i class="fa fa-trash"></i></button>
+                                            @endif
                                         </td>
                                         <div class="modal fade" id="deleteUserModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
@@ -105,6 +98,25 @@
                                 @endforeach
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul class="pagination">
+                                @if($users->onFirstPage())
+                                    <li><a class="disabled">&lt;</a></li>
+                                @else
+                                    <li><a href="{{ $users->previousPageUrl() }}">&lt;</a></li>
+                                @endif
+                                @for($page = 1; $page <= $users->lastPage(); $page++)
+                                    <li><a href="{{ $users->url($page) }}" class="{{ $users->currentPage() == $page ? 'is_active' : '' }}">{{ $page }}</a></li>
+                                @endfor
+                                @if($users->hasMorePages())
+                                    <li><a href="{{ $users->nextPageUrl() }}">&gt;</a></li>
+                                @else
+                                    <li><a class="disabled">&gt;</a></li>
+                                @endif
+                            </ul>
                         </div>
                     </div>
                 </main>

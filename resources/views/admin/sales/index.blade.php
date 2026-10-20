@@ -25,6 +25,25 @@
                         </div>
                     </div>
                     <div class="admin-card">
+                        <div class="admin-filter">
+                            <form method="GET" action="{{ route('admin.sales.index') }}">
+                                <input type="text" name="search" placeholder="Search order or user..." class="form-control-gk" >
+                                <select name="status" class="form-select-gk">
+                                    <option value="">All status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="cancelled">Cancelled</option>
+                                    <option value="refunded">Refunded</option>
+                                </select>
+                                <select name="payment_method" class="form-select-gk">
+                                    <option value="">All payment methods</option>
+                                    <option value="card">Card</option>
+                                    <option value="paypal">PayPal</option>
+                                    <option value="mbway">MB WAY</option>
+                                </select>
+                                <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </form>
+                        </div>
                         <div class="table-wrap">
                             <table class="gk-table">
                                 <thead>
@@ -60,6 +79,21 @@
                             </table>
                         </div>
                     </div>
+                    <ul class="pagination">
+                        @if($sales->onFirstPage())
+                            <li><a class="disabled">&lt;</a></li>
+                        @else
+                            <li><a href="{{ $sales->previousPageUrl() }}">&lt;</a></li>
+                        @endif
+                        @for($page = 1; $page <= $sales->lastPage(); $page++)
+                            <li><a href="{{ $sales->url($page) }}" class="{{ $sales->currentPage() == $page ? 'is_active' : '' }}">{{ $page }}</a></li>
+                        @endfor
+                        @if($sales->hasMorePages())
+                            <li><a href="{{ $sales->nextPageUrl() }}">&gt;</a></li>
+                        @else
+                            <li><a class="disabled">&gt;</a></li>
+                        @endif
+                    </ul>
                 </main>
             </div>
         </div>

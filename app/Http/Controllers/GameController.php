@@ -41,7 +41,7 @@ class GameController extends Controller
             });
         }
 
-        $games = $query->get();
+        $games = $query->latest()->paginate(6)->withQueryString();
 
         $publishers = Publisher::all();
         $categories = Category::all();
@@ -316,7 +316,7 @@ class GameController extends Controller
             });
         }
 
-        $games = $query->get();
+        $games = $query->latest()->paginate(6)->withQueryString();
 
         foreach ($games as $game) {
             if ($game->image_path) {

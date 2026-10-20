@@ -29,6 +29,12 @@
                         </div>
                     </div>
                     <div class="admin-card">
+                        <div class="admin-filter">
+                            <form method="GET" action="{{ route('admin.platforms.index') }}">
+                                <input type="text" name="search" placeholder="Search platforms..." class="form-control-gk">
+                                <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </form>
+                        </div>
                         <div class="table-wrap">
                             <table class="gk-table">
                                 <thead>
@@ -89,6 +95,21 @@
                             </table>
                         </div>
                     </div>
+                    <ul class="pagination">
+                        @if($platforms->onFirstPage())
+                            <li><a class="disabled">&lt;</a></li>
+                        @else
+                            <li><a href="{{ $platforms->previousPageUrl() }}">&lt;</a></li>
+                        @endif
+                        @for($page = 1; $page <= $platforms->lastPage(); $page++)
+                            <li><a href="{{ $platforms->url($page) }}" class="{{ $platforms->currentPage() == $page ? 'is_active' : '' }}">{{ $page }}</a></li>
+                        @endfor
+                        @if($platforms->hasMorePages())
+                            <li><a href="{{ $platforms->nextPageUrl() }}">&gt;</a></li>
+                        @else
+                            <li><a class="disabled">&gt;</a></li>
+                        @endif
+                    </ul>
                 </main>
             </div>
         </div>

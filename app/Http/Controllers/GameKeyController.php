@@ -26,7 +26,7 @@ class GameKeyController extends Controller
             $query->where('status', $request->status);
         }
 
-        $keys = $query->latest()->get();
+        $keys = $query->latest()->paginate(6)->withQueryString();
 
         $games = Game::orderBy('title')->get();
 
