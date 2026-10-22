@@ -14,13 +14,22 @@ class GameResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        if($this->image_path){
+            $image = '/storage/' . $this->image_path;
+        }
+        elseif($this->image_url){
+            $image = $this->image_url;
+        }
+        else{
+            $image = '/assets/images/default-game.png';
+        }
+
         return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
             'release_date' => $this->release_date,
-            'image_url' => $this->image_url,
-            'image_path' => $this->image_path
+            'image' => $image,
         ];
     }
 }

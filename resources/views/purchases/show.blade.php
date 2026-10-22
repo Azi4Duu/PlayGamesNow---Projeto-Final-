@@ -29,7 +29,8 @@
                         <tr>
                             <th>Game</th>
                             <th>Platform</th>
-                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
                             <th>Game Key</th>
                         </tr>
                         </thead>
@@ -38,10 +39,13 @@
                             <tr>
                                 <td>{{$item->gamePlatform->game->title}}</td>
                                 <td>{{$item->gamePlatform->platform->platform_name}}</td>
+                                <td>{{ $item->quantity }}</td>
                                 <td>{{number_format($item->unit_price, 2)}}€</td>
                                 <td>
                                     @foreach($item->saleKeys as $saleKey)
-                                        <code>{{$saleKey->gameKey->code}}</code>
+                                        <div>
+                                            <code>{{$saleKey->gameKey->code}}</code>
+                                        </div>
                                     @endforeach
                                 </td>
                             </tr>

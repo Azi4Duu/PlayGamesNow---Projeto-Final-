@@ -10,6 +10,7 @@ use App\Models\GamePlatform;
 use App\Models\Platform;
 use App\Models\Publisher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GameController extends Controller
 {
@@ -84,6 +85,7 @@ class GameController extends Controller
             'release_date' => 'required|date',
             'description' => 'required',
             'image_url' => 'nullable|url',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'categories' => 'required|array',
             'categories.*' => 'exists:categories,id',
             'platforms' => 'required|array',
@@ -116,12 +118,19 @@ class GameController extends Controller
             }
         }
 
+        $imagePath = null;
+
+        if($request->hasFile('image')){
+            $imagePath = $request->file('image')->store('games', 'public');
+        }
+
         $game = Game::create([
             'title' => $request->title,
             'publisher_id' => $request->publisher_id,
             'release_date' => $request->release_date,
             'description' => $request->description,
             'image_url' => $request->image_url,
+            'image_path' => $imagePath,
         ]);
 
         $game->categories()->sync($request->categories);
@@ -203,6 +212,7 @@ class GameController extends Controller
             'release_date' => 'required|date',
             'description' => 'required',
             'image_url' => 'nullable|url',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'categories' => 'required|array',
             'categories.*' => 'exists:categories,id',
             'platforms' => 'required|array',
@@ -235,12 +245,24 @@ class GameController extends Controller
             }
         }
 
+        $imagePath = $game->image_path;
+
+        if($request->hasFile('image')){
+
+            if($game->image_path){
+                Storage::disk('public')->delete($game->image_path);
+            }
+
+            $imagePath = $request->file('image')->store('games', 'public');
+        }
+
         $game->update([
             'title' => $request->title,
             'publisher_id' => $request->publisher_id,
             'release_date' => $request->release_date,
             'description' => $request->description,
             'image_url' => $request->image_url,
+            'image_path' => $imagePath,
         ]);
 
         $game->categories()->sync($request->categories);

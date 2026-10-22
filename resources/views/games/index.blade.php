@@ -65,13 +65,12 @@
                     <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6">
                         <div class="item">
                             <div class="thumb">
-                                <a href="{{route('games.show', $gamePlatform)}}"><img
-                                        src="{{ $game->image_url ? $game->image_url : asset('assets/images/default-game.png') }}"
-                                        alt="">
+                                <a href="{{route('games.show', $gamePlatform)}}">
+                                    <img src="{{ $game->display_image }}" alt="{{ $game->title }}">
                                 </a>
                                 @if($gamePlatform->platform->icon_path)
                                     <span class="platform-icon">
-                                        <img src="{{ asset($gamePlatform->platform->icon_path) }}" alt="{{ $gamePlatform->platform->platform_name }}">
+                                        <img src="{{ asset('storage/' . $gamePlatform->platform->icon_path) }}" alt="{{ $gamePlatform->platform->platform_name }}">
                                     </span>
                                 @endif
                                 <span class="price">

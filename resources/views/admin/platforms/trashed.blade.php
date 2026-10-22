@@ -48,7 +48,7 @@
                                         <td>
                                             @if($platform->icon_path)
                                                 <span class="admin-platform-icon">
-                                                    <img src="{{ asset($platform->icon_path) }}" alt="{{ $platform->platform_name }}">
+                                                    <img src="{{ asset('storage/' . $platform->icon_path) }}" alt="{{ $platform->platform_name }}">
                                                 </span>
                                             @else
                                                 <span class="admin-platform-icon">

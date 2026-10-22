@@ -23,6 +23,17 @@ class SaleResource extends JsonResource
             'payment_method' => $this->payment_method,
             'created_at' => $this->created_at,
             'items' => $this->items->map(function ($item) {
+
+                if($item->gamePlatform->game->image_path){
+                    $image = '/storage/' . $item->gamePlatform->game->image_path;
+                }
+                elseif($item->gamePlatform->game->image_url){
+                    $image = $item->gamePlatform->game->image_url;
+                }
+                else{
+                    $image = '/assets/images/default-game.png';
+                }
+
                 return [
                     'id' => $item->id,
                     'quantity' => $item->quantity,
@@ -30,8 +41,7 @@ class SaleResource extends JsonResource
                     'game' => [
                         'id' => $item->gamePlatform->game->id,
                         'title' => $item->gamePlatform->game->title,
-                        'image_url' => $item->gamePlatform->game->image_url,
-                        'image_path' => $item->gamePlatform->game->image_path,
+                        'image' => $image,
                     ],
                     'platform' => [
                         'id' => $item->gamePlatform->platform->id,

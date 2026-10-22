@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="admin-card">
-                        <form action="{{ route('admin.platforms.update', $platform) }}" method="POST">
+                        <form action="{{ route('admin.platforms.update', $platform) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="form-group">
@@ -37,12 +37,12 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label>Icon path</label>
-                                <input type="text" name="icon_path" class="form-control form-control-gk @error('icon_path') is-invalid @enderror" value="{{ old('icon_path', $platform->icon_path) }}">
-                                @error('icon_path')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                <label>Platform Icon</label>
+                                <input type="file" name="icon" class="form-control form-control-gk file-input @error('icon') is-invalid @enderror" accept="image/*">
+                                @error('icon')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                             </div>
                             @if($platform->icon_path)
@@ -51,7 +51,7 @@
                                     <div>
                                         <div>
                                             <span class="admin-platform-icon">
-                                                <img src="{{ asset($platform->icon_path) }}" alt="{{ $platform->platform_name }}">
+                                                <img src="{{ asset('storage/' . $platform->icon_path) }}" alt="{{ $platform->platform_name }}">
                                             </span>
                                         </div>
                                     </div>

@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="admin-card">
-                        <form action="{{route('admin.games.store')}}" method="POST">
+                        <form action="{{route('admin.games.store')}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label>Title</label>
@@ -65,6 +65,15 @@
                                 <label>Image URL</label>
                                 <input name="image_url" class="form-control form-control-gk @error('image_url') is-invalid @enderror" placeholder="https://..." value="{{ old('image_url') }}">
                                 @error('image_url')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label>Image</label>
+                                <input type="file" name="image" class="form-control form-control-gk file-input @error('image') is-invalid @enderror" accept="image/*">
+                                @error('image')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

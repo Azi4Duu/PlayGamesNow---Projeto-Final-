@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="left-image">
-                        <img src="{{$game->image_url ? $game->image_url : asset('assets/images/default-game.png') }}" alt="">
+                        <img src="{{ $game->display_image }}" alt="{{ $game->title }}">
                     </div>
                 </div>
                 <div class="col-lg-6 align-self-center">
@@ -91,7 +91,7 @@
                             </div>
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-                                    <p>{{$game->description}}</p>
+                                    <p class="game-description">{{$game->description}}</p>
                                 </div>
                             </div>
                         </div>
@@ -102,41 +102,47 @@
     </div>
 
     @if($relatedGames->count())
-        <div class="section categories related-games">
+        <div class="section trending related-games">
             <div class="container">
+
                 <div class="row">
+
                     <div class="col-lg-12">
                         <div class="section-heading">
                             <h2>Related Games</h2>
                         </div>
                     </div>
+
                 </div>
-                <div class="row">
+
+                <div class="row related-games-row">
                     @foreach($relatedGames as $related)
-                        <div class="col-lg col-sm-6 col-xs-12">
+                        <div class="related-game-col">
                             <div class="item">
                                 <div class="thumb">
-                                    <a href="{{route('games.show', $related)}}">
-                                        <img src="{{ $related->game->image_url ? $related->game->image_url : asset('assets/images/default-game.png') }}" alt="">
+                                    <a href="{{ route('games.show', $related) }}">
+                                        <img src="{{ $related->game->display_image }}" alt="{{ $related->game->title }}">
                                     </a>
                                     @if($related->platform->icon_path)
                                         <span class="platform-icon">
-                                            <img src="{{ asset($related->platform->icon_path) }}" alt="{{ $related->platform->platform_name }}">
+                                            <img src="{{ asset('storage/' . $related->platform->icon_path) }}" alt="{{ $related->platform->platform_name }}">
                                         </span>
                                     @endif
                                     <span class="price">
                                         @if($related->old_price)
-                                            <em>{{number_format($related->old_price, 2)}}€</em>
+                                            <em>{{ number_format($related->old_price, 2) }}€</em>
                                         @endif
-                                        {{number_format($related->price, 2)}}€
+                                        {{ number_format($related->price, 2) }}€
                                     </span>
                                 </div>
                                 <div class="down-content">
                                     @foreach($related->game->categories as $category)
-                                        <span class="category">{{$category->category_name}}</span>
+                                        <span class="category">
+                                            {{ $category->category_name }}
+                                        </span>
                                     @endforeach
-                                    <h4>{{$related->game->title}}</h4>
-                                    <a href="{{route('games.show', $related)}}"><i class="fa fa-shopping-bag"></i></a>
+                                    <h4>{{ $related->game->title }}</h4>
+                                    <a href="{{ route('games.show', $related) }}"><i class="fa fa-shopping-bag"></i></a>
                                 </div>
                             </div>
                         </div>

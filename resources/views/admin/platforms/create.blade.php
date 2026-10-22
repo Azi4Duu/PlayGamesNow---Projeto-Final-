@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="admin-card">
-                        <form action="{{ route('admin.platforms.store') }}" method="POST">
+                        <form action="{{ route('admin.platforms.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label>Platform name</label>
@@ -36,9 +36,9 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label>Icon path</label>
-                                <input type="text" name="icon_path" class="form-control form-control-gk @error('icon_path') is-invalid @enderror" placeholder="assets/images/platforms/steam.png" value="{{ old('icon_path') }}">
-                                @error('icon_path')
+                                <label>Platform Icon</label>
+                                <input type="file" name="icon" class="form-control form-control-gk file-input @error('icon') is-invalid @enderror" accept="image/*">
+                                @error('icon')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

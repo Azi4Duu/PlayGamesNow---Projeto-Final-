@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Platform;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PlatformController extends Controller
 {
@@ -38,12 +39,18 @@ class PlatformController extends Controller
     {
         $request->validate([
             'platform_name' => 'required|string|max:255|unique:platforms,platform_name',
-            'icon_path' => 'nullable|string|max:255',
+            'icon' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
+
+        $iconPath = null;
+
+        if($request->hasFile('icon')){
+            $iconPath = $request->file('icon')->store('platforms', 'public');
+        }
 
         Platform::create([
             'platform_name' => $request->platform_name,
-            'icon_path' => $request->icon_path,
+            'icon_path' => $iconPath,
         ]);
 
         return redirect()->route('admin.platforms.index')
@@ -73,11 +80,22 @@ class PlatformController extends Controller
     {
         $request->validate([
             'platform_name' => 'required|string|max:255|unique:platforms,platform_name,' . $platform->id,
-            'icon_path' => 'nullable|string|max:255',
+            'icon' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
+        $iconPath = $platform->icon_path;
+
+        if($request->hasFile('icon')){
+
+            if($platform->icon_path){
+                Storage::disk('public')->delete($platform->icon_path);
+            }
+
+            $iconPath = $request->file('icon')->store('platforms', 'public');
+        }
+
         $platform->platform_name = $request->platform_name;
-        $platform->icon_path = $request->icon_path;
+        $platform->icon_path = $iconPath;
 
         $platform->save();
 

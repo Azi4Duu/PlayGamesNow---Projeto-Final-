@@ -72,8 +72,6 @@
                                 </thead>
                                 <tbody>
                                 @foreach($games as $game)
-
-
                                     <tr>
                                         <td>
                                             <div class="product-mini">

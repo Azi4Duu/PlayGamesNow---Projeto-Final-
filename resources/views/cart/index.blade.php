@@ -25,7 +25,7 @@
                     @if($cart && count($cart->items))
                         @foreach($cart->items as $item)
                             <div class="cart-item">
-                                <img src="{{$item->gamePlatform->game->image_url}}" alt="">
+                                <img src="{{ $item->gamePlatform->game->display_image }}" alt="{{ $item->gamePlatform->game->title }}">
                                 <div>
                                     <h5>{{$item->gamePlatform->game->title}}</h5>
                                     <span>{{$item->gamePlatform->platform->platform_name}}</span>

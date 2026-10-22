@@ -14,6 +14,23 @@ class GamePlatformResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        if($this->game->image_path){
+            $image = '/storage/' . $this->game->image_path;
+        }
+        elseif($this->game->image_url){
+            $image = $this->game->image_url;
+        }
+        else{
+            $image = '/assets/images/default-game.png';
+        }
+
+        if($this->platform->icon_path){
+            $platformIcon = '/storage/' . $this->platform->icon_path;
+        }
+        else{
+            $platformIcon = null;
+        }
+
         return [
             'id' => $this->id,
             'game' => [
@@ -21,13 +38,12 @@ class GamePlatformResource extends JsonResource
                 'title' => $this->game->title,
                 'description' => $this->game->description,
                 'release_date' => $this->game->release_date,
-                'image_url' => $this->game->image_url,
-                'image_path' => $this->game->image_path,
+                'image' => $image,
             ],
             'platform' => [
                 'id' => $this->platform->id,
                 'name' => $this->platform->platform_name,
-                'icon_path' => $this->platform->icon_path,
+                'icon' => $platformIcon,
             ],
             'price' => $this->price,
             'old_price' => $this->old_price,

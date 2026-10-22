@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('publisher_id')->nullable()->constrained('publishers')->nullOnDelete();
             $table->unsignedInteger('rawg_id')->nullable()->unique();
             $table->string('title');
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->date('release_date')->nullable();
             $table->string('image_url')->nullable();
             $table->string('image_path')->nullable();

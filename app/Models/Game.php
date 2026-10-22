@@ -40,5 +40,13 @@ class Game extends Model
             ->withTimestamps();
     }
 
-
+    public function getDisplayImageAttribute(){
+        if ($this->image_path) {
+            return asset('storage/' . $this->image_path);
+        }
+        if ($this->image_url) {
+            return $this->image_url;
+        }
+        return asset('assets/images/default-game.png');
+    }
 }

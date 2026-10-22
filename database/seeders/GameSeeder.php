@@ -20,7 +20,7 @@ class GameSeeder extends Seeder
             'description' => 'Open world action-adventure game.',
             'release_date' => '2013-09-17',
             'image_url' => null,
-            'image_path' => 'assets/images/trending-01.jpg',
+            'image_path' => null,
         ]);
 
         Game::create([
@@ -30,7 +30,7 @@ class GameSeeder extends Seeder
             'description' => 'Open world role-playing game.',
             'release_date' => '2015-05-19',
             'image_url' => null,
-            'image_path' => 'assets/images/trending-02.jpg',
+            'image_path' => null,
         ]);
 
         Game::create([
@@ -40,7 +40,7 @@ class GameSeeder extends Seeder
             'description' => 'Open world action RPG set in Night City.',
             'release_date' => '2020-12-10',
             'image_url' => null,
-            'image_path' => 'assets/images/trending-03.jpg',
+            'image_path' => null,
         ]);
     }
 }

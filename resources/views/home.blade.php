@@ -19,19 +19,13 @@
                 </div>
                 <div class="col-lg-4 offset-lg-2">
                     <div class="right-image">
-                        <a href="{{ route('games.show', $featuredGame) }}">
-                            @if($featuredGame)
-                                @if($featuredGame->game->image_url)
-                                    <img src="{{ $featuredGame->game->image_url }}" alt="{{ $featuredGame->game->title }}">
-                                @elseif($featuredGame->game->image_path)
-                                    <img src="{{ asset($featuredGame->game->image_path) }}" alt="{{ $featuredGame->game->title }}">
-                                @else
-                                    <img src="{{ asset('assets/images/default-game.png') }}" alt="Default game image">
-                                @endif
-                            @endif
-                            <span class="price">{{ number_format($featuredGame->price, 2, ',', '.') }}€</span>
-                            <span class="offer">-{{ $featuredGame->discount_percentage }}%</span>
-                        </a>
+                        @if($featuredGame)
+                            <a href="{{ route('games.show', $featuredGame) }}">
+                                <img src="{{ $featuredGame->game->display_image }}" alt="{{ $featuredGame->game->title }}">
+                                <span class="price">{{ number_format($featuredGame->price, 2, ',', '.') }}€</span>
+                                <span class="offer">-{{ $featuredGame->discount_percentage }}%</span>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -47,7 +41,7 @@
                             <div class="item">
                                 <div class="home-platform-icon">
                                     @if($platform->icon_path)
-                                        <img src="{{ asset($platform->icon_path) }}" alt="{{ $platform->platform_name }}">
+                                        <img src="{{ asset('storage/' . $platform->icon_path) }}" alt="{{ $platform->platform_name }}">
                                     @else
                                         <i class="fa fa-gamepad"></i>
                                     @endif
@@ -80,13 +74,7 @@
                         <div class="item">
                             <div class="thumb">
                                 <a href="{{route('games.show', $gamePlatform)}}">
-                                    @if($gamePlatform->game->image_url)
-                                        <img src="{{ $gamePlatform->game->image_url }}" alt="{{ $gamePlatform->game->title }}">
-                                    @elseif($gamePlatform->game->image_path)
-                                        <img src="{{ asset($gamePlatform->game->image_path) }}" alt="{{ $gamePlatform->game->title }}">
-                                    @else
-                                        <img src="{{ asset('assets/images/default-game.png') }}" alt="Default game image">
-                                    @endif
+                                    <img src="{{ $gamePlatform->game->display_image }}" alt="{{ $gamePlatform->game->title }}">
                                 </a>
                                 <span class="price">
                                     @if($gamePlatform->old_price)
@@ -128,13 +116,7 @@
                         <div class="item">
                             <div class="thumb">
                                 <a href="{{ route('games.show', $gamePlatform) }}">
-                                    @if($gamePlatform->game->image_url)
-                                        <img class="best-seller-image" src="{{ $gamePlatform->game->image_url }}" alt="{{ $gamePlatform->game->title }}">
-                                    @elseif($gamePlatform->game->image_path)
-                                        <img class="best-seller-image" src="{{ asset($gamePlatform->game->image_path) }}" alt="{{ $gamePlatform->game->title }}">
-                                    @else
-                                        <img class="best-seller-image" src="{{ asset('assets/images/default-game.png') }}" alt="Default game image">
-                                    @endif
+                                    <img class="best-seller-image" src="{{ $gamePlatform->game->display_image }}" alt="{{ $gamePlatform->game->title }}">
                                 </a>
                             </div>
                             <div class="down-content">
@@ -167,10 +149,8 @@
                             <h4>{{ $category->category_name }}</h4>
                             <div class="thumb">
                                 <a href="{{ route('games.shop', ['categories' => $category->id]) }}">
-                                    @if($categoryGame && $categoryGame->image_url)
-                                        <img class="best-seller-image" src="{{ $categoryGame->image_url }}" alt="{{ $category->category_name }}">
-                                    @elseif($categoryGame && $categoryGame->image_path)
-                                        <img class="best-seller-image" src="{{ asset($categoryGame->image_path) }}" alt="{{ $category->category_name }}">
+                                    @if($categoryGame)
+                                        <img class="best-seller-image" src="{{ $categoryGame->display_image }}" alt="{{ $category->category_name }}">
                                     @else
                                         <img class="best-seller-image" src="{{ asset('assets/images/default-game.png') }}" alt="{{ $category->category_name }}">
                                     @endif
