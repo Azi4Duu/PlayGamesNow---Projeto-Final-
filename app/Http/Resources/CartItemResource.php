@@ -15,7 +15,7 @@ class CartItemResource extends JsonResource
     public function toArray(Request $request): array
     {
         if($this->gamePlatform->game->image_path){
-            $image = '/storage/' . $this->gamePlatform->game->image_path;
+            $image = asset('storage/' . $this->gamePlatform->game->image_path);
         }
         elseif($this->gamePlatform->game->image_url){
             $image = $this->gamePlatform->game->image_url;
@@ -24,9 +24,15 @@ class CartItemResource extends JsonResource
             $image = '/assets/images/default-game.png';
         }
 
+        $maxQuantity = $this->gamePlatform
+            ->gameKeys()
+            ->where('status', 'available')
+            ->count();
+
         return [
             'id' => $this->id,
             'quantity' => $this->quantity,
+            'max_quantity' => $maxQuantity,
             'game_platform' => [
                 'id' => $this->gamePlatform->id,
                 'game' => [

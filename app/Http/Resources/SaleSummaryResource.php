@@ -19,6 +19,7 @@ class SaleSummaryResource extends JsonResource
             'title' => 'Order #' . $this->id,
             'status' => $this->status,
             'payment_method' => $this->payment_method,
+            'total' => $this->total,
             'created_at' => $this->created_at,
         ];
     }

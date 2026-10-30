@@ -41,8 +41,8 @@
                                 </select>
                                 <select class="form-select-gk" name="active">
                                     <option value="">All Status</option>
-                                    <option value="1"{{ request('active') === '1' ? 'selected' : '' }}>Active</option>
-                                    <option value="0"{{ request('active') === '0' ? 'selected' : '' }}>Inactive</option>
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
                                 </select>
                                 <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
                             </div>

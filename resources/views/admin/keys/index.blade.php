@@ -29,22 +29,20 @@
                     <div class="admin-card">
                         <div class="admin-filter">
                             <form action="{{ route('admin.keys.index') }}" method="GET">
-                                <div class="admin-filter">
-                                    <select name="game" class="form-select-gk">
-                                        <option value="">All games</option>
-                                        @foreach($games as $game)
-                                            <option value="{{ $game->id }}">{{ $game->title }}</option>
-                                        @endforeach
-                                    </select>
-                                    <select name="status" class="form-select-gk">
-                                        <option value="">All statuses</option>
-                                        <option value="available">Available</option>
-                                        <option value="reserved">Reserved</option>
-                                        <option value="sold">Sold</option>
-                                        <option value="revoked">Revoked</option>
-                                    </select>
-                                    <button type="submit" class="btn-gk">Filter</button>
-                                </div>
+                                <select name="game" class="form-select-gk">
+                                    <option value="">All games</option>
+                                    @foreach($games as $game)
+                                        <option value="{{ $game->id }}">{{ $game->title }}</option>
+                                    @endforeach
+                                </select>
+                                <select name="status" class="form-select-gk">
+                                    <option value="">All statuses</option>
+                                    <option value="available">Available</option>
+                                    <option value="reserved">Reserved</option>
+                                    <option value="sold">Sold</option>
+                                    <option value="revoked">Revoked</option>
+                                </select>
+                                <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
                             </form>
                         </div>
                         <div class="table-wrap">

@@ -48,17 +48,6 @@ class GameController extends Controller
         $categories = Category::all();
         $platforms = Platform::all();
 
-        foreach ($games as $game) {
-            if ($game->image_path) {
-                $game->display_image = asset($game->image_path);
-            }
-            elseif ($game->image_url) {
-                $game->display_image = $game->image_url;
-            }
-            else{
-                $game->display_image = null;
-            }
-        }
 
         return view('admin.games.index', compact('games', 'publishers', 'categories', 'platforms'));
     }

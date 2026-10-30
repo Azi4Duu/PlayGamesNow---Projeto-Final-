@@ -78,6 +78,7 @@ class UserController extends Controller
             'active' => $request->active
         ])){
             $user->assignRole($user->role);
+            $user->sendEmailVerificationNotification();
             return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
         }
         return back()->withInput(['name', 'username', 'email'])->with('error', 'Something went wrong while creating the user.');
@@ -112,7 +113,6 @@ class UserController extends Controller
             'name' => 'required',
             'username' => 'required|unique:users,username,'. $user->id,
             'email' => 'required|email|unique:users,email,'. $user->id,
-            'password' => 'nullable|min:6',
         ];
         $messages = [
             'name.required' => 'Name is required.',
@@ -121,7 +121,6 @@ class UserController extends Controller
             'email.required' => 'Email is required.',
             'email.email' => 'Invalid email.',
             'email.unique' => 'Email already exists.',
-            'password.min' => 'Password must be at least 6 characters.',
         ];
 
         $data = [
@@ -142,9 +141,16 @@ class UserController extends Controller
             $data['active'] = $request->active;
         }
 
+        if($userauth->id == $user->id){
+            $rules['password'] = 'nullable|min:6|confirmed';
+
+            $messages['password.min'] = 'Password must be at least 6 characters.';
+            $messages['password.confirmed'] = 'Password confirmation does not match.';
+        }
+
         $request->validate($rules, $messages);
 
-        if($request->password != null){
+        if($userauth->id == $user->id && $request->filled('password')){
             $data['password'] = Hash::make($request->password);
         }
         if($user->update($data)){

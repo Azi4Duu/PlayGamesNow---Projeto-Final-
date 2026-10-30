@@ -6,6 +6,8 @@
 
     <title>Play Games Now</title>
 
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon.png') }}">
+
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="{{asset('vendor/bootstrap/css/bootstrap.min.css')}}">
 

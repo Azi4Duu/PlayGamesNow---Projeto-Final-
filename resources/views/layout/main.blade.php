@@ -9,7 +9,9 @@
 
 @include('layout.parts.navbar')
 
-@yield('content')
+<main class="main-content">
+    @yield('content')
+</main>
 
 @include('layout.parts.footer')
 

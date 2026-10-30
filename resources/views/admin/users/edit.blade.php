@@ -88,15 +88,23 @@
                                     </div>
                                 </div>
                             @endif
-                            <div class="form-group">
-                                <label>Password</label>
-                                <input type="password" class="form-control form-control-gk @error('password') is-invalid @enderror" id="password" name="password" >
-                                @error('password')
-                                <div class="invalid-feedback">
-                                    {{$message}}
+                            @if($userauth->id == $user->id)
+                                <div class="form-row-gk">
+                                    <div class="form-group">
+                                        <label>New Password</label>
+                                        <input type="password" class="form-control form-control-gk @error('password') is-invalid @enderror" id="password" name="password">
+                                        @error('password')
+                                        <div class="invalid-feedback">
+                                            {{$message}}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Confirm Password</label>
+                                        <input type="password" class="form-control form-control-gk" id="password_confirmation" name="password_confirmation">
+                                    </div>
                                 </div>
-                                @enderror
-                            </div>
+                            @endif
                             <button class="btn-gk" type="submit">Save user</button>
                             <a class="btn-gk light" href="{{route('admin.users.index')}}">Cancel</a>
                         </form>

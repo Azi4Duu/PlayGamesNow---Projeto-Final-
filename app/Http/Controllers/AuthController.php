@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TwoFactorCodeMail;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
@@ -59,9 +60,7 @@ class AuthController extends Controller
             '2fa_remember' => $request->boolean('remember'),
         ]);
 
-        Mail::raw("Your authentication code is: {$code}", function ($message) use ($user) {
-            $message->to($user->email)->subject("Play Games Now - Authentication code");
-        });
+        Mail::to($user->email)->send(new TwoFactorCodeMail($code));
 
         return redirect()->route('2fa.show');
     }

@@ -13,49 +13,64 @@
 
     <div class="section trending">
         <div class="container">
-                <form action="{{ route('games.shop') }}" method="GET" class="shop-filters">
-                    <div class="shop-filter-row">
-                        <div class="form-group">
-                            <label>Search game</label>
-                            <input type="text" name="search" class="form-control-gk" placeholder="Search by game name...">
+            <form action="{{ route('games.shop') }}" method="GET">
+                <div class="shop-search-row">
+                    <div class="search-group">
+                        <label>Search game</label>
+                        <input type="text" name="search" class="form-control-gk" placeholder="Search by game name...">
+                    </div>
+                    <div class="search-actions">
+                        <button type="submit" class="btn-gk light">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <button class="btn-gk light" type="button" data-bs-toggle="collapse" data-bs-target="#shopFilters" aria-expanded="false" aria-controls="shopFilters">
+                            <i class="fa-solid fa-filter"></i>
+                            Filters
+                        </button>
+                    </div>
+                </div>
+                <div class="collapse" id="shopFilters">
+                    <div class="shop-filters">
+                        <div class="shop-filter-row">
+                            <div class="form-group">
+                                <label>Platform</label>
+                                <select name="platform" class="form-select-gk">
+                                    <option value="">All platforms</option>
+                                    @foreach($platforms as $platform)
+                                        <option value="{{ $platform->id }}">
+                                            {{ $platform->platform_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Order by price</label>
+                                <select name="order" class="form-select-gk">
+                                    <option value="">Default</option>
+                                    <option value="asc">Price: Low to High</option>
+                                    <option value="desc">Price: High to Low</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn-gk light">
+                                    Apply Filters
+                                </button>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label>Platform</label>
-                            <select name="platform" class="form-select-gk">
-                                <option value="">All platforms</option>
-                                @foreach($platforms as $platform)
-                                    <option value="{{ $platform->id }}">
-                                        {{ $platform->platform_name }}
-                                    </option>
+                            <label>Categories</label>
+                            <div class="category-options">
+                                @foreach($categories as $category)
+                                    <label>
+                                        <input type="checkbox" name="categories[]" value="{{ $category->id }}">
+                                        {{ $category->category_name }}
+                                    </label>
                                 @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Order by price</label>
-                            <select name="order" class="form-select-gk">
-                                <option value="">Default</option>
-                                <option value="asc">Price: Low to High</option>
-                                <option value="desc">Price: High to Low</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn-gk light">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>Categories</label>
-                        <div class="category-options">
-                            @foreach($categories as $category)
-                                <label>
-                                    <input type="checkbox" name="categories[]" value="{{ $category->id }}">
-                                    {{ $category->category_name }}
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-                </form>
+                </div>
+            </form>
 
             <div class="row trending-box">
                 @foreach($gamePlatforms as $gamePlatform)
