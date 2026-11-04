@@ -8,6 +8,8 @@ use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\SaleKey;
 use Illuminate\Http\Request;
+use App\Mail\PurchaseReceiptMail;
+use Illuminate\Support\Facades\Mail;
 
 class SaleController extends Controller
 {
@@ -141,6 +143,16 @@ class SaleController extends Controller
 
         $cart->status = 'converted';
         $cart->save();
+
+        $sale->load([
+            'user',
+            'items.gamePlatform.game',
+            'items.gamePlatform.platform',
+            'items.saleKeys.gameKey',
+        ]);
+
+        Mail::to($sale->user->email)
+            ->send(new PurchaseReceiptMail($sale));
 
         return redirect()->route('customer.purchases.show', $sale)->with('success', 'Purchase completed successfully.');
     }

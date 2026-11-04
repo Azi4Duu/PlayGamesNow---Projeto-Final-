@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\SaleCheckoutResource;
 use App\Http\Resources\SaleResource;
 use App\Http\Resources\SaleSummaryResource;
+use App\Mail\PurchaseReceiptMail;
 use App\Models\Cart;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\SaleKey;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class SaleController extends Controller
 {
@@ -100,12 +102,19 @@ class SaleController extends Controller
         $cart->save();
 
         $sale->load([
+            'user',
             'items.gamePlatform.game',
             'items.gamePlatform.platform',
             'items.saleKeys.gameKey',
         ]);
 
-        return response()->json(['message' => 'Purchase completed successfully.', 'sale' => new SaleCheckoutResource($sale)], 201);
+        Mail::to($sale->user->email)
+            ->send(new PurchaseReceiptMail($sale));
+
+        return response()->json([
+            'message' => 'Purchase completed successfully. A receipt has been sent to your email.',
+            'sale' => new SaleCheckoutResource($sale)
+        ], 201);
     }
 
     /**
