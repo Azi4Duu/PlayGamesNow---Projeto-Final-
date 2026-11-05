@@ -52,6 +52,14 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label for="stock" class="form-label">Stock</label>
+                                <select name="stock" id="stock" class="form-select-gk">
+                                    <option value="">All</option>
+                                    <option value="in">In Stock</option>
+                                    <option value="out">Out of Stock</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <button type="submit" class="btn-gk light">
                                     Apply Filters
                                 </button>

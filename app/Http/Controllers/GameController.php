@@ -379,6 +379,20 @@ class GameController extends Controller
             $query->where('platform_id', $request->platform);
         }
 
+        if ($request->filled('stock')) {
+            if ($request->stock === 'in') {
+                $query->whereHas('gameKeys', function ($q) {
+                    $q->where('status', 'available');
+                });
+            }
+
+            if ($request->stock === 'out') {
+                $query->whereDoesntHave('gameKeys', function ($q) {
+                    $q->where('status', 'available');
+                });
+            }
+        }
+
         if($request->filled('order')){
             $query->orderBy('price', $request->order);
         }else{
