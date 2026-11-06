@@ -28,8 +28,9 @@
                     <div class="admin-card">
                         <div class="admin-filter">
                             <form method="GET" action="{{ route('admin.platforms.trashed') }}">
-                                <input type="text" name="search" placeholder="Search platforms..." class="form-control-gk">
+                                <input type="text" name="search" placeholder="Search platforms..." class="form-control-gk" value="{{ request('search') }}">
                                 <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                <a href="{{ route('admin.platforms.trashed') }}" class="btn-gk light">Clear Filters</a>
                             </form>
                         </div>
                         <div class="table-wrap">

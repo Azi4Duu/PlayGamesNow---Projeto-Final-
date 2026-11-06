@@ -27,21 +27,22 @@
                     <div class="admin-card">
                         <div class="admin-filter">
                             <form method="GET" action="{{ route('admin.sales.index') }}">
-                                <input type="text" name="search" placeholder="Search order or user..." class="form-control-gk" >
+                                <input type="text" name="search" placeholder="Search order or user..." class="form-control-gk" value="{{ request('search') }}" >
                                 <select name="status" class="form-select-gk">
                                     <option value="">All status</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="paid">Paid</option>
-                                    <option value="cancelled">Cancelled</option>
-                                    <option value="refunded">Refunded</option>
+                                    <option value="pending" @selected(request('status') === 'pending')>Pending</option>
+                                    <option value="paid" @selected(request('status') === 'paid')>Paid</option>
+                                    <option value="cancelled" @selected(request('status') === 'cancelled')>Cancelled</option>
+                                    <option value="refunded" @selected(request('status') === 'refunded')>Refunded</option>
                                 </select>
                                 <select name="payment_method" class="form-select-gk">
                                     <option value="">All payment methods</option>
-                                    <option value="card">Card</option>
-                                    <option value="paypal">PayPal</option>
-                                    <option value="mbway">MB WAY</option>
+                                    <option value="card" @selected(request('payment_method') === 'card')>Card</option>
+                                    <option value="paypal" @selected(request('payment_method') === 'paypal')>PayPal</option>
+                                    <option value="mbway" @selected(request('payment_method') === 'mbway')>MB WAY</option>
                                 </select>
                                 <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                <a href="{{ route('admin.sales.index') }}" class="btn-gk light">Clear Filters</a>
                             </form>
                         </div>
                         <div class="table-wrap">

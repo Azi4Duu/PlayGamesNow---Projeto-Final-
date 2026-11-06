@@ -31,18 +31,19 @@
                     <div class="admin-card">
                         <div class="admin-filter">
                             <form method="GET" action="{{ route('admin.coupons.index') }}">
-                                <input type="text" name="search" placeholder="Search coupons..." class="form-control-gk">
+                                <input type="text" name="search" placeholder="Search coupons..." class="form-control-gk" value="{{ request('search') }}">
                                 <select name="discount_type" class="form-select-gk">
                                     <option value="">All types</option>
-                                    <option value="percentage">Percentage</option>
-                                    <option value="fixed">Fixed</option>
+                                    <option value="percentage" @selected(request('discount_type') === 'percentage')>Percentage</option>
+                                    <option value="fixed" @selected(request('discount_type') === 'fixed')>Fixed</option>
                                 </select>
                                 <select name="active" class="form-select-gk">
                                     <option value="">All status</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
+                                    <option value="1" @selected(request('active') === '1')>Active</option>
+                                    <option value="0" @selected(request('active') === '0')>Inactive</option>
                                 </select>
                                 <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                <a href="{{ route('admin.coupons.index') }}" class="btn-gk light">Clear Filters</a>
                             </form>
                         </div>
                         <div class="table-wrap">

@@ -56,6 +56,7 @@
                                     @endforeach
                                 </select>
                                 <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                <a href="{{ route('admin.games.trashed') }}" class="btn-gk light">Clear Filters</a>
                             </form>
                         </div>
                         <div class="table-wrap">

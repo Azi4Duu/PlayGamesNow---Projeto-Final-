@@ -32,17 +32,18 @@
                                 <select name="game" class="form-select-gk">
                                     <option value="">All games</option>
                                     @foreach($games as $game)
-                                        <option value="{{ $game->id }}">{{ $game->title }}</option>
+                                        <option value="{{ $game->id }}" @selected(request('game') == $game->id)>{{ $game->title }}</option>
                                     @endforeach
                                 </select>
                                 <select name="status" class="form-select-gk">
                                     <option value="">All statuses</option>
-                                    <option value="available">Available</option>
-                                    <option value="reserved">Reserved</option>
-                                    <option value="sold">Sold</option>
-                                    <option value="revoked">Revoked</option>
+                                    <option value="available" @selected(request('status') === 'available')>Available</option>
+                                    <option value="reserved" @selected(request('status') === 'reserved')>Reserved</option>
+                                    <option value="sold" @selected(request('status') === 'sold')>Sold</option>
+                                    <option value="revoked" @selected(request('status') === 'revoked')>Revoked</option>
                                 </select>
                                 <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                <a href="{{ route('admin.keys.index') }}" class="btn-gk light">Clear Filters</a>
                             </form>
                         </div>
                         <div class="table-wrap">

@@ -17,7 +17,7 @@
                 <div class="shop-search-row">
                     <div class="search-group">
                         <label>Search game</label>
-                        <input type="text" name="search" class="form-control-gk" placeholder="Search by game name...">
+                        <input type="text" name="search" class="form-control-gk" placeholder="Search by game name..." value="{{ request('search') }}">
                     </div>
                     <div class="search-actions">
                         <button type="submit" class="btn-gk light">
@@ -37,7 +37,7 @@
                                 <select name="platform" class="form-select-gk">
                                     <option value="">All platforms</option>
                                     @foreach($platforms as $platform)
-                                        <option value="{{ $platform->id }}">
+                                        <option value="{{ $platform->id }}" @selected(request('platform') == $platform->id)>
                                             {{ $platform->platform_name }}
                                         </option>
                                     @endforeach
@@ -47,22 +47,25 @@
                                 <label>Order by price</label>
                                 <select name="order" class="form-select-gk">
                                     <option value="">Default</option>
-                                    <option value="asc">Price: Low to High</option>
-                                    <option value="desc">Price: High to Low</option>
+                                    <option value="asc" @selected(request('order') === 'asc')>Price: Low to High</option>
+                                    <option value="desc" @selected(request('order') === 'desc')>Price: High to Low</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="stock" class="form-label">Stock</label>
                                 <select name="stock" id="stock" class="form-select-gk">
                                     <option value="">All</option>
-                                    <option value="in">In Stock</option>
-                                    <option value="out">Out of Stock</option>
+                                    <option value="in" @selected(request('stock') === 'in')>In Stock</option>
+                                    <option value="out" @selected(request('stock') === 'out')>Out of Stock</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn-gk light">
                                     Apply Filters
                                 </button>
+                                <a href="{{ route('games.shop') }}" class="btn-gk light">
+                                    Clear Filters
+                                </a>
                             </div>
                         </div>
                         <div class="form-group">
@@ -70,7 +73,7 @@
                             <div class="category-options">
                                 @foreach($categories as $category)
                                     <label>
-                                        <input type="checkbox" name="categories[]" value="{{ $category->id }}">
+                                        <input type="checkbox" name="categories[]" value="{{ $category->id }}" @checked(in_array($category->id,(array) request('categories', [])))>
                                         {{ $category->category_name }}
                                     </label>
                                 @endforeach

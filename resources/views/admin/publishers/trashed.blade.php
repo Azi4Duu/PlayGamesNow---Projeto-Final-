@@ -27,9 +27,10 @@
                     </div>
                     <div class="admin-card">
                         <div class="admin-filter">
-                            <form method="GET" action="{{ route('admin.publishers.index') }}">
-                                <input type="text" name="search" placeholder="Search publishers..." class="form-control-gk">
+                            <form method="GET" action="{{ route('admin.publishers.trashed') }}">
+                                <input type="text" name="search" placeholder="Search publishers..." class="form-control-gk" value="{{ request('search') }}">
                                 <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                <a href="{{ route('admin.publishers.trashed') }}" class="btn-gk light">Clear Filters</a>
                             </form>
                         </div>
                         <div class="table-wrap">

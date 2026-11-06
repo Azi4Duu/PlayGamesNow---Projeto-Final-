@@ -35,15 +35,16 @@
                                 <select class="form-select-gk" id="role" name="role">
                                     <option value="">All roles</option>
                                     @foreach($roles as $role)
-                                        <option>{{ucfirst($role->name)}}</option>
+                                        <option value="{{ $role->name }}"@selected(request('role') === $role->name)>{{ucfirst($role->name)}}</option>
                                     @endforeach
                                 </select>
                                 <select class="form-select-gk" name="active">
                                     <option value="">All Status</option>
-                                    <option value="1"{{ request('active') === '1' ? 'selected' : '' }}>Active</option>
-                                    <option value="0"{{ request('active') === '0' ? 'selected' : '' }}>Inactive</option>
+                                    <option value="1"@selected(request('active') === '1')>Active</option>
+                                    <option value="0"@selected(request('active') === '0')>Inactive</option>
                                 </select>
                                 <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                <a href="{{ route('admin.users.trashed') }}" class="btn-gk light">Clear Filters</a>
                             </div>
                         </form>
                         <div class="table-wrap">

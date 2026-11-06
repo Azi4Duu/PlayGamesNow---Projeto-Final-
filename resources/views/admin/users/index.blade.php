@@ -32,19 +32,20 @@
                         <form action="{{route('admin.users.index')}}" method="GET">
                             @csrf
                             <div class="admin-filter">
-                                <input class="form-control-gk" placeholder="Search users..." id="search" name="search">
+                                <input class="form-control-gk" placeholder="Search users..." id="search" name="search" value="{{ request('search') }}">
                                 <select class="form-select-gk" id="role" name="role">
                                     <option value="">All roles</option>
                                     @foreach($roles as $role)
-                                        <option>{{ucfirst($role->name)}}</option>
+                                        <option value="{{ $role->name }}"@selected(request('role') === $role->name)>{{ucfirst($role->name)}}</option>
                                     @endforeach
                                 </select>
                                 <select class="form-select-gk" name="active">
                                     <option value="">All Status</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
+                                    <option value="1" @selected(request('active') === '1')>Active</option>
+                                    <option value="0" @selected(request('active') === '0')>Inactive</option>
                                 </select>
                                 <button type="submit" class="btn-gk light"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                <a href="{{ route('admin.users.index') }}" class="btn-gk light">Clear Filters</a>
                             </div>
                         </form>
                         <div class="table-wrap">
