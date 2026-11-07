@@ -22,8 +22,11 @@ class CartController extends Controller
 
         if(!$cart){
             return response()->json([
-               'items' => [],
-               'subtotal' => 0,
+                'items' => [],
+                'coupon' => null,
+                'subtotal' => 0,
+                'discount' => 0,
+                'total' => 0,
             ]);
         }
 
