@@ -72,12 +72,46 @@
                     </div>
                     <div class="summary-row">
                         <span>Discount</span>
-                        <span>€0.00</span>
+                        <span>-{{ number_format($discount, 2) }}€</span>
                     </div>
-                    <div class="form-group">
-                        <input class="form-control-gk" placeholder="Coupon code">
-                    </div>
-                    <button class="btn-gk light full">Apply coupon</button>
+                    @if($cart && $cart->coupon)
+
+                        <div class="form-group">
+                            <label>Applied coupon</label>
+                            <div>
+                                <strong>{{ $cart->coupon->code }}</strong>
+                                @if($cart->coupon->discount_type === 'percentage')
+                                    ({{ number_format($cart->coupon->discount_value, 0) }}%)
+                                @else
+                                    ({{ number_format($cart->coupon->discount_value, 2) }}€)
+                                @endif
+                            </div>
+                        </div>
+                        <form action="{{ route('customer.cart.coupon.remove') }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-gk light full">
+                                Remove coupon
+                            </button>
+                        </form>
+                    @else
+                        <form action="{{ route('customer.cart.coupon.apply') }}" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <input class="form-control-gk @error('coupon_code') is-invalid @enderror" name="coupon_code" placeholder="Coupon code" value="{{ old('coupon_code') }}">
+                                @error('coupon_code')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                            <button type="submit" class="btn-gk light full">
+                                Apply coupon
+                            </button>
+                        </form>
+
+                    @endif
+
                     <div class="summary-row total">
                         <span>Total</span>
                         <span>{{ number_format($total, 2) }}€</span>

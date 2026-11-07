@@ -19,6 +19,12 @@ class SaleResource extends JsonResource
             'subtotal' => $this->subtotal,
             'discount' => $this->discount,
             'total' => $this->total,
+            'coupon' => $this->coupon ? [
+                'id' => $this->coupon->id,
+                'code' => $this->coupon->code,
+                'discount_type' => $this->coupon->discount_type,
+                'discount_value' => $this->coupon->discount_value,
+            ] : null,
             'status' => $this->status,
             'payment_method' => $this->payment_method,
             'created_at' => $this->created_at,

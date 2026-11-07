@@ -401,7 +401,7 @@ class GameController extends Controller
 
         $categories = Category::orderBy('category_name')->get();
 
-        $gamePlatforms = $query->paginate(8)->withQueryString();
+        $gamePlatforms = $query->paginate(12)->withQueryString();
 
         $platforms = Platform::orderBy('platform_name')->get();
 

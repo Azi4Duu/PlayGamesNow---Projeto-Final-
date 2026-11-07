@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Coupon;
 use App\Models\GamePlatform;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -16,16 +18,27 @@ class CartController extends Controller
     {
         $cart = Cart::where('user_id', auth()->id())->where('status', 'active')->first();
 
+        $subtotal = 0;
+        $discount = 0;
         $total = 0;
 
-        if($cart){
-            foreach($cart->items as $item){
-                $subtotal = $item->gamePlatform->price * $item->quantity;
-                $total += $subtotal;
+        if ($cart) {
+            foreach ($cart->items as $item) {
+                $subtotal += $item->gamePlatform->price * $item->quantity;
             }
+            if ($cart->coupon) {
+                if ($cart->coupon->discount_type === 'percentage') {
+                    $discount = $subtotal * ($cart->coupon->discount_value / 100);
+                }
+                if ($cart->coupon->discount_type === 'fixed') {
+                    $discount = $cart->coupon->discount_value;
+                }
+                $discount = min($discount, $subtotal);
+            }
+            $total = $subtotal - $discount;
         }
 
-        return view('cart.index', compact('cart', 'total'));
+        return view('cart.index', compact('cart', 'subtotal', 'discount', 'total'));
     }
 
     /**
@@ -141,5 +154,84 @@ class CartController extends Controller
         $cartItem->delete();
 
         return redirect()->route('customer.cart.index')->with('success', 'Game removed from cart successfully.');
+    }
+
+    public function applyCoupon(Request $request)
+    {
+        $request->validate([
+            'coupon_code' => 'required|string|max:255',
+        ]);
+
+        $cart = Cart::where('user_id', auth()->id())
+            ->where('status', 'active')
+            ->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+            return redirect()
+                ->route('customer.cart.index')
+                ->withErrors(['coupon_code' => 'Your cart is empty.']);
+        }
+
+        $coupon = Coupon::where('code', strtoupper($request->coupon_code))
+            ->first();
+
+        if (!$coupon) {
+            return back()
+                ->withInput()
+                ->withErrors(['coupon_code' => 'Invalid coupon code.']);
+        }
+
+        if (!$coupon->active) {
+            return back()
+                ->withInput()
+                ->withErrors(['coupon_code' => 'This coupon is not active.']);
+        }
+
+        if ($coupon->starts_at && now()->lt($coupon->starts_at)) {
+            return back()
+                ->withInput()
+                ->withErrors(['coupon_code' => 'This coupon is not active yet.']);
+        }
+
+        if ($coupon->expires_at && now()->gt($coupon->expires_at)) {
+            return back()
+                ->withInput()
+                ->withErrors(['coupon_code' => 'This coupon has expired.']);
+        }
+
+        if ($coupon->usage_limit !== null) {
+            $usageCount = Sale::where('coupon_id', $coupon->id)
+                ->where('status', 'paid')
+                ->count();
+
+            if ($usageCount >= $coupon->usage_limit) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['coupon_code' => 'This coupon has reached its usage limit.']);
+            }
+        }
+
+        $cart->coupon_id = $coupon->id;
+        $cart->save();
+
+        return redirect()
+            ->route('customer.cart.index')
+            ->with('success', 'Coupon applied successfully.');
+    }
+
+    public function removeCoupon()
+    {
+        $cart = Cart::where('user_id', auth()->id())
+            ->where('status', 'active')
+            ->first();
+
+        if ($cart) {
+            $cart->coupon_id = null;
+            $cart->save();
+        }
+
+        return redirect()
+            ->route('customer.cart.index')
+            ->with('success', 'Coupon removed successfully.');
     }
 }

@@ -20,6 +20,13 @@ class Coupon extends Model
         'active',
     ];
 
+    protected $casts = [
+        'starts_at' => 'datetime',
+        'expires_at' => 'datetime',
+        'active' => 'boolean',
+        'discount_value' => 'decimal:2',
+    ];
+
     public function carts():HasMany{
         return $this->hasMany(Cart::class);
     }

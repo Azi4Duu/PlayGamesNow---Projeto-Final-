@@ -53,9 +53,30 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>{{ number_format($sale->subtotal, 2) }}€</span>
+                </div>
+                @if($sale->coupon)
+                    <div class="summary-row">
+                        <span>Coupon</span>
+                        <span>
+                            {{ $sale->coupon->code }}
+                            @if($sale->coupon->discount_type === 'percentage')
+                                ({{ number_format($sale->coupon->discount_value, 0) }}%)
+                            @else
+                                ({{ number_format($sale->coupon->discount_value, 2) }}€)
+                            @endif
+                        </span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Discount</span>
+                        <span>-{{ number_format($sale->discount, 2) }}€</span>
+                    </div>
+                @endif
                 <div class="summary-row total">
                     <span>Total</span>
-                    <span>{{number_format($sale->total, 2)}}€</span>
+                    <span>{{ number_format($sale->total, 2) }}€</span>
                 </div>
             </div>
         </div>

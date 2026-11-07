@@ -62,12 +62,46 @@ class SaleController extends Controller
         }
 
         $discount = 0;
+        $coupon = $cart->coupon;
+
+        if ($coupon) {
+
+            if (!$coupon->active || ($coupon->starts_at && now()->lt($coupon->starts_at)) || ($coupon->expires_at && now()->gt($coupon->expires_at))) {
+                $cart->coupon_id = null;
+                $cart->save();
+
+                return response()->json([
+                    'message' => 'The coupon is no longer valid.'
+                ], 422);
+            }
+
+            if ($coupon->usage_limit !== null) {
+                $usageCount = Sale::where('coupon_id', $coupon->id)->where('status', 'paid')->count();
+
+                if ($usageCount >= $coupon->usage_limit) {
+                    $cart->coupon_id = null;
+                    $cart->save();
+
+                    return response()->json(['message' => 'This coupon has reached its usage limit.'], 422);
+                }
+            }
+
+            if ($coupon->discount_type === 'percentage') {
+                $discount = $subtotal * ($coupon->discount_value / 100);
+            }
+
+            if ($coupon->discount_type === 'fixed') {
+                $discount = $coupon->discount_value;
+            }
+
+            $discount = min($discount, $subtotal);
+        }
 
         $total = $subtotal - $discount;
 
         $sale = Sale::create([
             'user_id' => $request->user()->id,
-            'coupon_id' => null,
+            'coupon_id' => $coupon?->id,
             'subtotal' => $subtotal,
             'discount' => $discount,
             'total' => $total,
@@ -103,6 +137,7 @@ class SaleController extends Controller
 
         $sale->load([
             'user',
+            'coupon',
             'items.gamePlatform.game',
             'items.gamePlatform.platform',
             'items.saleKeys.gameKey',
@@ -127,6 +162,7 @@ class SaleController extends Controller
         }
 
         $sale->load([
+            'coupon',
             'items.gamePlatform.game',
             'items.gamePlatform.platform',
             'items.saleKeys.gameKey',

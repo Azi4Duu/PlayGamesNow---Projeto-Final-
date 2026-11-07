@@ -19,6 +19,11 @@ class SaleCheckoutResource extends JsonResource
             'subtotal' => $this->subtotal,
             'discount' => $this->discount,
             'total' => $this->total,
+            'coupon' => $this->coupon ? [
+                'code' => $this->coupon->code,
+                'discount_type' => $this->coupon->discount_type,
+                'discount_value' => $this->coupon->discount_value,
+            ] : null,
             'status' => $this->status,
             'payment_method' => $this->payment_method,
             'items' => $this->items->map(function ($item) {

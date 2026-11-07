@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CartItemResource;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Coupon;
 use App\Models\GamePlatform;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -26,14 +28,39 @@ class CartController extends Controller
         }
 
         $subtotal = 0;
+        $discount = 0;
 
-        foreach($cart->items as $item){
+        foreach ($cart->items as $item) {
             $subtotal += $item->gamePlatform->price * $item->quantity;
         }
 
+        if ($cart->coupon) {
+            if ($cart->coupon->discount_type === 'percentage') {
+                $discount = $subtotal * ($cart->coupon->discount_value / 100);
+            }
+
+            if ($cart->coupon->discount_type === 'fixed') {
+                $discount = $cart->coupon->discount_value;
+            }
+
+            $discount = min($discount, $subtotal);
+        }
+
+        $total = $subtotal - $discount;
+
         return response()->json([
             'items' => CartItemResource::collection($cart->items),
+
+            'coupon' => $cart->coupon ? [
+                'id' => $cart->coupon->id,
+                'code' => $cart->coupon->code,
+                'discount_type' => $cart->coupon->discount_type,
+                'discount_value' => $cart->coupon->discount_value,
+            ] : null,
+
             'subtotal' => $subtotal,
+            'discount' => $discount,
+            'total' => $total,
         ]);
     }
 
@@ -155,6 +182,85 @@ class CartController extends Controller
 
         return response()->json([
             'message' => 'Cart item removed successfully.',
+        ]);
+    }
+
+    public function applyCoupon(Request $request)
+    {
+        $request->validate([
+            'coupon_code' => 'required|string|max:255',
+        ]);
+
+        $cart = Cart::where('user_id', $request->user()->id)
+            ->where('status', 'active')
+            ->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+            return response()->json([
+                'message' => 'Your cart is empty.'
+            ], 422);
+        }
+
+        $coupon = Coupon::where('code', strtoupper($request->coupon_code))
+            ->first();
+
+        if (!$coupon) {
+            return response()->json([
+                'message' => 'Invalid coupon code.'
+            ], 422);
+        }
+
+        if (!$coupon->active) {
+            return response()->json([
+                'message' => 'This coupon is not active.'
+            ], 422);
+        }
+
+        if ($coupon->starts_at && now()->lt($coupon->starts_at)) {
+            return response()->json([
+                'message' => 'This coupon is not active yet.'
+            ], 422);
+        }
+
+        if ($coupon->expires_at && now()->gt($coupon->expires_at)) {
+            return response()->json([
+                'message' => 'This coupon has expired.'
+            ], 422);
+        }
+
+        if ($coupon->usage_limit !== null) {
+            $usageCount = Sale::where('coupon_id', $coupon->id)
+                ->where('status', 'paid')
+                ->count();
+
+            if ($usageCount >= $coupon->usage_limit) {
+                return response()->json([
+                    'message' => 'This coupon has reached its usage limit.'
+                ], 422);
+            }
+        }
+
+        $cart->coupon_id = $coupon->id;
+        $cart->save();
+
+        return response()->json([
+            'message' => 'Coupon applied successfully.'
+        ]);
+    }
+
+    public function removeCoupon(Request $request)
+    {
+        $cart = Cart::where('user_id', $request->user()->id)
+            ->where('status', 'active')
+            ->first();
+
+        if ($cart) {
+            $cart->coupon_id = null;
+            $cart->save();
+        }
+
+        return response()->json([
+            'message' => 'Coupon removed successfully.'
         ]);
     }
 }

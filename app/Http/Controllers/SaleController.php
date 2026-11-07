@@ -51,12 +51,25 @@ class SaleController extends Controller
                 ->withErrors(['error' => 'Your cart is empty.']);
         }
 
-        $total = 0;
+        $subtotal = 0;
 
-        foreach($cart->items as $item) {
-            $subtotal = $item->gamePlatform->price * $item->quantity;
-            $total += $subtotal;
+        foreach ($cart->items as $item) {
+            $subtotal += $item->gamePlatform->price * $item->quantity;
         }
+
+        $discount = 0;
+
+        if ($cart->coupon) {
+            if ($cart->coupon->discount_type === 'percentage') {
+                $discount = $subtotal * ($cart->coupon->discount_value / 100);
+            }
+            if ($cart->coupon->discount_type === 'fixed') {
+                $discount = $cart->coupon->discount_value;
+            }
+            $discount = min($discount, $subtotal);
+        }
+
+        $total = $subtotal - $discount;
 
         $selectedMethod = $request->payment_method;
 
@@ -67,7 +80,7 @@ class SaleController extends Controller
                 ]);
         }
 
-        return view('checkout.create', compact('cart', 'total', 'selectedMethod'));
+        return view('checkout.create', compact('cart', 'subtotal', 'discount', 'total', 'selectedMethod'));
     }
 
     /**
@@ -105,12 +118,44 @@ class SaleController extends Controller
         }
 
         $discount = 0;
+        $coupon = $cart->coupon;
+
+        if ($coupon) {
+            if (!$coupon->active || ($coupon->starts_at && now()->lt($coupon->starts_at)) || ($coupon->expires_at && now()->gt($coupon->expires_at))) {
+                $cart->coupon_id = null;
+                $cart->save();
+
+                return redirect()->route('customer.cart.index')
+                    ->withErrors(['coupon_code' => 'The coupon is no longer valid.']);
+            }
+
+            if ($coupon->usage_limit !== null) {
+                $usageCount = Sale::where('coupon_id', $coupon->id)->where('status', 'paid')->count();
+                if ($usageCount >= $coupon->usage_limit) {
+                    $cart->coupon_id = null;
+                    $cart->save();
+
+                    return redirect()->route('customer.cart.index')
+                        ->withErrors(['coupon_code' => 'This coupon has reached its usage limit.']);
+                }
+            }
+
+            if ($coupon->discount_type === 'percentage') {
+                $discount = $subtotal * ($coupon->discount_value / 100);
+            }
+
+            if ($coupon->discount_type === 'fixed') {
+                $discount = $coupon->discount_value;
+            }
+
+            $discount = min($discount, $subtotal);
+        }
 
         $total = $subtotal - $discount;
 
         $sale = Sale::create([
             'user_id' => auth()->id(),
-            'coupon_id' => null,
+            'coupon_id' => $coupon?->id,
             'subtotal' => $subtotal,
             'discount' => $discount,
             'total' => $total,

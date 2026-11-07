@@ -135,15 +135,21 @@
                             @endforeach
                             <div class="summary-row">
                                 <span>Subtotal</span>
-                                <span>{{number_format($total, 2)}}€</span>
+                                <span>{{ number_format($subtotal, 2) }}€</span>
                             </div>
                             <div class="summary-row">
                                 <span>Discount</span>
-                                <span>0.00€</span>
+                                <span>-{{ number_format($discount, 2) }}€</span>
                             </div>
+                            @if($cart->coupon)
+                                <div class="summary-row">
+                                    <span>Coupon</span>
+                                    <span>{{ $cart->coupon->code }}</span>
+                                </div>
+                            @endif
                             <div class="summary-row total">
                                 <span>Total</span>
-                                <span>{{number_format($total, 2)}}€</span>
+                                <span>{{ number_format($total, 2) }}€</span>
                             </div>
                             <button type="submit" class="btn-gk full">Pay now</button>
                         </aside>

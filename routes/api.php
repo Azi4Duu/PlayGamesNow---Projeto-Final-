@@ -24,6 +24,8 @@ Route::name('api.')->group(function () {
         Route::patch('profile/password', [ProfileController::class, 'updatePassword']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::apiResource('cart-items', CartController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::post('cart/coupon/apply', [CartController::class, 'applyCoupon']);
+        Route::delete('cart/coupon/remove', [CartController::class, 'removeCoupon']);
         Route::apiResource('sales', SaleController::class)->only(['index', 'store', 'show']);
     });
 });

@@ -86,6 +86,8 @@ Route::middleware('auth')->group(function () {
                 Route::put('/profile/change-password', [ProfileController::class, 'updatePassword'])->name('profile.change-password');
 
                 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+                Route::post('/cart/coupon/apply', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
+                Route::delete('/cart/coupon/remove', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
                 Route::post('/cart/{gamePlatform}', [CartController::class, 'store'])->name('cart.store');
                 Route::put('/cart/{cartItem}', [CartController::class, 'update'])->name('cart.update');
                 Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
