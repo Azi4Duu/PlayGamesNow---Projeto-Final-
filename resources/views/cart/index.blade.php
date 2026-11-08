@@ -68,7 +68,7 @@
                     <h3>Summary</h3>
                     <div class="summary-row">
                         <span>Subtotal</span>
-                        <span>{{ number_format($total, 2) }}€</span>
+                        <span>{{ number_format($subtotal, 2) }}€</span>
                     </div>
                     <div class="summary-row">
                         <span>Discount</span>
