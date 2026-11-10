@@ -56,7 +56,7 @@
                         @enderror
                     </div>
                     <button class="btn-gk full" type="submit">Update Password</button>
-                    <a class="btn-gk full light" href="{{route('customer.profile.show')}}">Cancel</a>
+                    <a class="btn-gk full light mt-3" href="{{route('customer.profile.show')}}">Cancel</a>
                 </form>
             </div>
         </div>

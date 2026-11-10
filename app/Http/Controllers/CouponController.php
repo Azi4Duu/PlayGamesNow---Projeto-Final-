@@ -49,7 +49,7 @@ class CouponController extends Controller
             'discount_type' => 'required|in:percentage,fixed',
             'discount_value' => 'required|numeric|min:0',
             'starts_at' => 'nullable|date',
-            'expires_at' => 'nullable|date|after_or_equal:starts_at',
+            'expires_at' => 'nullable|date|after_or_equal:today|after_or_equal:starts_at',
             'usage_limit' => 'nullable|integer|min:1',
         ]);
 
